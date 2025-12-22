@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-zh="馬英源的個人簡介" data-en="Ma Ying Yuen's Personal Profile">馬英源的個人簡介</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Microsoft YaHei", Arial, sans-serif;
+        }
+        
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+        
+        /* 導航欄 */
+        .navbar {
+            background-color: transparent;
+            color: var(--dark);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+        
+        .navbar.scrolled {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .navbar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .navbar-menu li {
+            margin-left: 30px;
+        }
+        
+        .navbar-menu a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .navbar-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .navbar-menu a:hover::after {
+            width: 100%;
+        }
+        
+        .navbar.scrolled .navbar-menu a {
+            color: var(--dark);
+        }
+        
+        .lang-switch {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .lang-switch:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .navbar.scrolled .lang-switch {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* 首頁橫幅 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            object-fit: cover;
+        }
+        
+        .hero img:hover {
+            transform: scale(1.05);
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            background-color: var(--dark);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 內容板塊 */
+        .section {
+            padding: 100px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+        
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .section-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--dark);
+            position: relative;
+            font-weight: 700;
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        /* 關於我 */
+        .about-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 60px;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .about-text h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+        
+        .about-text p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--gray);
+        }
+        
+        .about-skills {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .skill-item {
+            margin-bottom: 25px;
+        }
+        
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .skill-bar {
+            height: 8px;
+            background-color: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 1.5s ease;
+            width: 0;
+        }
+        
+        .skill-progress.animate {
+            width: var(--width);
+        }
+        
+        /* 經歷/項目 */
+        .experience-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .experience-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+        }
+        
+        .experience-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .experience-card h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .experience-date {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            background-color: rgba(59, 130, 246, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        
+        .experience-card p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--gray);
+        }
+        
+        /* 作品展示 */
+        .works-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .work-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .work-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .work-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .work-card:hover .work-img {
+            transform: scale(1.05);
+        }
+        
+        .work-img-container {
+            overflow: hidden;
+        }
+        
+        .work-content {
+            padding: 25px;
+        }
+        
+        .work-card h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .work-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        .work-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            position: relative;
+            padding-bottom: 2px;
+        }
+        
+        .work-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .work-link:hover::after {
+            width: 100%;
+        }
+        
+        /* 興趣愛好 */
+        .hobby-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .hobby-item {
+            background-color: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .hobby-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .hobby-item i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        
+        .hobby-item:hover i {
+            transform: scale(1.1);
+            color: var(--primary-dark);
+        }
+        
+        .hobby-item h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .hobby-item p {
+            color: var(--gray);
+        }
+        
+        /* 頁腳 */
+        .footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 60px 0 30px;
+            margin-top: 50px;
+        }
+        
+        .footer-contact {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 0 20px;
+        }
+        
+        .footer-contact a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .footer-contact a:hover {
+            color: var(--primary);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-contact i {
+            font-size: 20px;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+        
+        .footer-divider {
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary);
+            margin: 0 auto 30px;
+            border-radius: 2px;
+        }
+        
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .navbar-menu {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+            }
+            
+            .navbar-menu.active {
+                display: flex;
+            }
+            
+            .navbar-menu li {
+                margin: 10px 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--dark);
+            }
+            
+            .navbar.scrolled .menu-toggle {
+                color: var(--dark);
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .section-title {
+                font-size: 30px;
+            }
+            
+            .about-container {
+                flex-direction: column;
+            }
+            
+            .footer-contact {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+        
+        /* 移動端菜單按鈕 */
+        .menu-toggle {
+            display: none;
+        }
+        
+        /* 新增：推薦信區域 */
+        .recommendation {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            margin-top: 40px;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .recommendation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-right: 15px;
+        }
+        
+        .recommendation h3 {
+            font-size: 24px;
+            color: var(--dark);
+            margin: 0;
+        }
+        
+        .recommendation-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        .recommendation-author {
+            text-align: right;
+            margin-top: 20px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        /* 新增：獎項展示 */
+        .awards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .award-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+        
+        .award-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .award-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .award-detail {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .award-year {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-top: 10px;
+        }
+    </style>
+    <!-- 引入圖標庫 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入現代字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo" data-zh="馬英源的主頁" data-en="Ma Ying Yuen's Homepage">馬英源的主頁</div>
+            <div style="display: flex; align-items: center;">
+                <ul class="navbar-menu">
+                    <li><a href="#home" data-zh="首頁" data-en="Home">首頁</a></li>
+                    <li><a href="#about" data-zh="關於我" data-en="About">關於我</a></li>
+                    <li><a href="#hobbies" data-zh="興趣愛好" data-en="Hobbies">興趣愛好</a></li>
+                    <li><a href="#experience" data-zh="經歷" data-en="Experience">經歷</a></li>
+                    <li><a href="#works" data-zh="作品展示" data-en="Works">作品展示</a></li>
+                    <li><a href="#awards" data-zh="獎項榮譽" data-en="Awards">獎項榮譽</a></li>
+                </ul>
+                <button class="lang-switch" id="langSwitch">EN</button>
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首頁橫幅 -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <img src="https://via.placeholder.com/180" alt="個人頭像">
+            <h1 data-zh="你好，我是馬英源" data-en="Hello, I'm Ma Ying Yuen">你好，我是馬英源</h1>
+            <p data-zh="聖公會白約翰會督中學 6D班學生 | 熱愛STEM及程式設計 | 智慧城市與空間數據科學探索者" 
+               data-en="Form 6D Student at S.K.H. Bishop Baker Secondary School | Passionate about STEM and Programming | Explorer in Smart Cities and Spatial Data Science">
+               聖公會白約翰會督中學 6D班學生 | 熱愛STEM及程式設計 | 智慧城市與空間數據科學探索者
+            </p>
+            <a href="#about" class="btn" data-zh="瞭解更多" data-en="Learn More">瞭解更多</a>
+        </div>
+    </section>
+
+    <!-- 關於我 -->
+    <section id="about" class="section">
+        <h2 class="section-title" data-zh="關於我" data-en="About Me">關於我</h2>
+        <div class="about-container">
+            <div class="about-text">
+                <h3 data-zh="個人簡介" data-en="Personal Introduction">個人簡介</h3>
+                <p data-zh="我是馬英源，現就讀於聖公會白約翰會督中學6D班。我是一名對STEM領域充滿熱情的學生，特別對智慧城市、空間數據科學和人工智能有濃厚興趣。" 
+                   data-en="I'm Ma Ying Yuen, currently studying in Form 6D at S.K.H. Bishop Baker Secondary School. I am a student passionate about STEM fields, with a particular interest in smart cities, spatial data science, and artificial intelligence.">
+                   我是馬英源，現就讀於聖公會白約翰會督中學6D班。我是一名對STEM領域充滿熱情的學生，特別對智慧城市、空間數據科學和人工智能有濃厚興趣。
+                </p>
+                <p data-zh="在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。" 
+                   data-en="Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.">
+                   在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。
+                </p>
+                <p data-zh="我性格堅韌、細心嚴謹且樂於助人，喜歡在團隊中協作完成任務，並樂於挑戰新事物，不斷突破自己的舒適區。在校內擔任副總學長等多項領導職務，培養了良好的組織和溝通能力。" 
+                   data-en="I am resilient, meticulous, and helpful, enjoy collaborating with classmates in teams to complete tasks, and am willing to challenge new things, constantly stepping out of my comfort zone. I have held multiple leadership positions in school, including Vice Head Prefect, which has developed my organizational and communication skills.">
+                   我性格堅韌、細心嚴謹且樂於助人，喜歡在團隊中協作完成任務，並樂於挑戰新事物，不斷突破自己的舒適區。在校內擔任副總學長等多項領導職務，培養了良好的組織和溝通能力。
+                </p>
+                <p data-zh="未來，我希望能在空間數據科學與智慧城市方向繼續深造，成為一名對社會有貢獻的工程師。" 
+                   data-en="In the future, I hope to further my studies in spatial data science and smart cities and become an engineer who contributes to society.">
+                   未來，我希望能在空間數據科學與智慧城市方向繼續深造，成為一名對社會有貢獻的工程師。
+                </p>
+                
+                <!-- 校長推薦信 -->
+                <div class="recommendation">
+                    <div class="recommendation-header">
+                        <i class="fas fa-quote-left recommendation-icon"></i>
+                        <h3 data-zh="校長推薦" data-en="Principal's Recommendation">校長推薦</h3>
+                    </div>
+                    <p class="recommendation-text" data-zh="「馬英源同學是一名勤奮、有服務精神且富有創新思維的學生。他在STEM領域表現突出，特別是在智慧城市和數據相關比賽中取得優異成績。儘管他的學業成績並非頂尖，但他展現出令人印象深刻的韌性、紀律和真正的成長心態。他曾多次獲得學業進步獎和科目獎項，證明了他設定目標、吸收反饋並將努力轉化為實際進步的能力。他具備的領導才能和服務精神，使他在同儕中脫穎而出。」" 
+                       data-en="'Mr. Ma Ying Yuen is a dedicated, service-minded and innovative student. He has outstanding performance in STEM fields, especially in smart city and data-related competitions. Although his academic results are not top-ranked, he shows impressive resilience, discipline and a true growth mindset. He has earned Academic Improvement Awards and subject prizes multiple times, demonstrating his ability to set goals, absorb feedback and turn effort into tangible progress. His leadership skills and service commitment make him stand out among his peers.'">
+                       「馬英源同學是一名勤奮、有服務精神且富有創新思維的學生。他在STEM領域表現突出，特別是在智慧城市和數據相關比賽中取得優異成績。儘管他的學業成績並非頂尖，但他展現出令人印象深刻的韌性、紀律和真正的成長心態。他曾多次獲得學業進步獎和科目獎項，證明了他設定目標、吸收反饋並將努力轉化為實際進步的能力。他具備的領導才能和服務精神，使他在同儕中脫穎而出。」
+                    </p>
+                    <div class="recommendation-author">
+                        <span data-zh="吳幼媚校長" data-en="Principal NG Yau-mei, Shirley">吳幼媚校長</span><br>
+                        <span data-zh="聖公會白約翰會督中學" data-en="S.K.H. Bishop Baker Secondary School">聖公會白約翰會督中學</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-skills">
+                <h3 data-zh="個人技能" data-en="Personal Skills">個人技能</h3>
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span data-zh="數學思維" data-en="Mathematical Thinking">數學思維</span>
+                        <span>92%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="--width: 92%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span data-zh="程式設計(Python/AI)" data-en="Programming (Python/AI)">程式設計(Python/AI)</span>
+                        <span>88%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="--width: 88%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span data-zh="空間數據分析" data-en="Spatial Data Analysis">空間數據分析</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="--width: 85%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span data-zh="STEM項目管理" data-en="STEM Project Management">STEM項目管理</span>
+                        <span>83%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="--width: 83%"></div>
+                    </div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span data-zh="團隊領導與協作" data-en="Team Leadership & Collaboration">團隊領導與協作</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="--width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 興趣愛好 -->
+    <section id="hobbies" class="section" style="background-color: #f9f9f9;">
+        <h2 class="section-title" data-zh="興趣愛好" data-en="Hobbies">興趣愛好</h2>
+        <div class="hobby-container">
+            <div class="hobby-item">
+                <i class="fas fa-robot"></i>
+                <h3 data-zh="機械人編程" data-en="Robotics Programming">機械人編程</h3>
+                <p data-zh="參與元朗區中學機械人培訓工作坊，學習機械人編程與控制，並在加德士機械人工程師教室競賽中獲得全場總冠軍。" 
+                   data-en="Participated in Yuen Long District Secondary School Robotics Training Workshops, learning robotics programming and control, and won the Overall Champion in Caltex Robot Engineer Labs Competition.">
+                   參與元朗區中學機械人培訓工作坊，學習機械人編程與控制，並在加德士機械人工程師教室競賽中獲得全場總冠軍。
+                </p>
+            </div>
+            <div class="hobby-item">
+                <i class="fas fa-volleyball-ball"></i>
+                <h3 data-zh="排球運動" data-en="Volleyball">排球運動</h3>
+                <p data-zh="熱愛排球運動，參加外展教練計劃 - 排球挑戰賽2022，並在2024年T.M. Youth Volleyball Competition中獲得第四名。" 
+                   data-en="Passionate about volleyball, participated in Outward Coach Program - Volleyball Challenge 2022, and won 4th place in 2024 T.M. Youth Volleyball Competition.">
+                   熱愛排球運動，參加外展教練計劃 - 排球挑戰賽2022，並在2024年T.M. Youth Volleyball Competition中獲得第四名。
+                </p>
+            </div>
+            <div class="hobby-item">
+                <i class="fas fa-code"></i>
+                <h3 data-zh="AI程式設計" data-en="AI Programming">AI程式設計</h3>
+                <p data-zh="參加賽馬會社區創新智能共學計劃，學習AI與Python編程，並在AI Hackathon 2025中獲得優異獎。" 
+                   data-en="Participated in Jockey Club AI Community Innovation Programme, learning AI and Python programming, and won Certificate of Merit in AI Hackathon 2025.">
+                   參加賽馬會社區創新智能共學計劃，學習AI與Python編程，並在AI Hackathon 2025中獲得優異獎。
+                </p>
+            </div>
+            <div class="hobby-item">
+                <i class="fas fa-hands-helping"></i>
+                <h3 data-zh="社區服務" data-en="Community Service">社區服務</h3>
+                <p data-zh="積極參與義務工作，擔任學生導師、同儕輔導計劃導師等，連續三年獲得香港青年協會有心學生嘉許狀。" 
+                   data-en="Actively participate in volunteer work, serving as Student Mentor, Peer Coaching Scheme Mentor, etc., and received Hong Kong Federation of Youth Groups Heart to Heart Project Appreciation Certificate for three consecutive years.">
+                   積極參與義務工作，擔任學生導師、同儕輔導計劃導師等，連續三年獲得香港青年協會有心學生嘉許狀。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 經歷/項目 -->
+    <section id="experience" class="section">
+        <h2 class="section-title" data-zh="我的經歷" data-en="My Experience">我的經歷</h2>
+        <div class="experience-container">
+            <div class="experience-card">
+                <h3 data-zh="副總學長及學長團隊" data-en="Vice Head Prefect & Prefect Team">副總學長及學長團隊</h3>
+                <div class="experience-date" data-zh="2022年至今" data-en="2022 - Present">2022年至今</div>
+                <p data-zh="自中三起擔任學長，後晉升為副總學長，多次獲得優秀學長獎和模範學長獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感。" 
+                   data-en="Served as Prefect since Form 3, later promoted to Vice Head Prefect, receiving Excellent Prefect Award and Model Prefect Award multiple times. Responsible for assisting school discipline management and organizing activities, developing leadership skills and sense of responsibility.">
+                   自中三起擔任學長，後晉升為副總學長，多次獲得優秀學長獎和模範學長獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感。
+                </p>
+            </div>
+            <div class="experience-card">
+                <h3 data-zh="數學俱樂部委員及導師" data-en="Mathematics Club Committee & Mentor">數學俱樂部委員及導師</h3>
+                <div class="experience-date" data-zh="2023-2025" data-en="2023-2025">2023-2025</div>
+                <p data-zh="擔任數學俱樂部委員會成員，並參與數學輔導計劃，幫助低年級學生提升數學能力。在國際希望杯數學邀請賽中獲得優異獎。" 
+                   data-en="Served as Mathematics Club Committee Member and participated in Mathematics Mentoring Scheme, helping junior students improve their mathematical abilities. Won Merit Winner in International Hope Cup Mathematics Invitational.">
+                   擔任數學俱樂部委員會成員，並參與數學輔導計劃，幫助低年級學生提升數學能力。在國際希望杯數學邀請賽中獲得優異獎。
+                </p>
+            </div>
+            <div class="experience-card">
+                <h3 data-zh="Mi Teen Academy主席及成員" data-en="Mi Teen Academy Chairperson & Member">Mi Teen Academy主席及成員</h3>
+                <div class="experience-date" data-zh="2022-2025" data-en="2022-2025">2022-2025</div>
+                <p data-zh="擔任Mi Teen Academy主席及成員，參與青少年發展活動，培養團隊合作和組織能力。參與大哥哥大姐姐計劃，協助新生適應校園生活。" 
+                   data-en="Served as Mi Teen Academy Chairperson and Member, participating in youth development activities, cultivating teamwork and organizational skills. Participated in Big Brother and Sister Scheme, assisting new students in adapting to school life.">
+                   擔任Mi Teen Academy主席及成員，參與青少年發展活動，培養團隊合作和組織能力。參與大哥哥大姐姐計劃，協助新生適應校園生活。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品展示 -->
+    <section id="works" class="section" style="background-color: #f9f9f9;">
+        <h2 class="section-title" data-zh="作品展示" data-en="My Works">作品展示</h2>
+        <div class="works-container">
+            <!-- 作品1 -->
+            <div class="work-card">
+                <div class="work-img-container">
+                    <img src="https://via.placeholder.com/600x400/3498db/ffffff?text=Smart+City+Project" alt="智慧城市項目" class="work-img" data-zh="智慧城市項目" data-en="Smart City Project">
+                </div>
+                <div class="work-content">
+                    <h3 data-zh="智慧城市空間數據挑戰項目" data-en="Smart City Spatial Data Challenge Project">智慧城市空間數據挑戰項目</h3>
+                    <p class="work-desc" data-zh="參加香港理工大學建造智慧城市比賽2025，我們的「空間數據挑戰在智慧城市」項目獲得亞軍。項目利用空間數據分析解決實際城市問題，展示數據科學在智慧城市規劃中的應用。" data-en="Participated in PolyU Build a Smart City Competition 2025, our 'Spatial Data Challenge in Smart City' project won First Runner-up. The project uses spatial data analysis to solve practical urban problems, demonstrating the application of data science in smart city planning.">
+                        參加香港理工大學建造智慧城市比賽2025，我們的「空間數據挑戰在智慧城市」項目獲得亞軍。項目利用空間數據分析解決實際城市問題，展示數據科學在智慧城市規劃中的應用。
+                    </p>
+                    <a href="#" class="work-link" data-zh="查看詳情" data-en="View Details">查看詳情</a>
+                </div>
+            </div>
+            <!-- 作品2 -->
+            <div class="work-card">
+                <div class="work-img-container">
+                    <img src="https://via.placeholder.com/600x400/2ecc71/ffffff?text=AI+Hackathon" alt="AI Hackathon項目" class="work-img" data-zh="AI Hackathon項目" data-en="AI Hackathon Project">
+                </div>
+                <div class="work-content">
+                    <h3 data-zh="AI Hackathon 2025優異項目" data-en="AI Hackathon 2025 Merit Project">AI Hackathon 2025優異項目</h3>
+                    <p class="work-desc" data-zh="參加中文大學賽馬會「智」為未來計劃AI Hackathon 2025，展示紮實的人工智能知識與編程能力，獲得優異獎。項目運用AI技術解決實際問題。" data-en="Participated in CUHK Jockey Club 'AI for the Future' AI Hackathon 2025, demonstrated solid AI knowledge and programming proficiency, and won Certificate of Merit. The project uses AI technology to solve practical problems.">
+                        參加中文大學賽馬會「智」為未來計劃AI Hackathon 2025，展示紮實的人工智能知識與編程能力，獲得優異獎。項目運用AI技術解決實際問題。
+                    </p>
+                    <a href="#" class="work-link" data-zh="查看詳情" data-en="View Details">查看詳情</a>
+                </div>
+            </div>
+            <!-- 作品3 -->
+            <div class="work-card">
+                <div class="work-img-container">
+                    <img src="https://via.placeholder.com/600x400/e74c3c/ffffff?text=Robot+Competition" alt="機械人競賽項目" class="work-img" data-zh="機械人競賽項目" data-en="Robot Competition Project">
+                </div>
+                <div class="work-content">
+                    <h3 data-zh="加德士機械人競賽全場總冠軍" data-en="Caltex Robot Competition Overall Champion">加德士機械人競賽全場總冠軍</h3>
+                    <p class="work-desc" data-zh="參加加德士機械人工程師教室全港中小學機械人競賽2023，在投射挑戰賽、冰壺彈射對戰等多個項目中獲獎，並榮獲中學組全場總冠軍。" data-en="Participated in Caltex Robot Engineer Labs Hong Kong Primary and Secondary Schools Robotics Competition 2023, won awards in multiple events including Projection Challenge and Curling Catapult Battle, and won Overall Champion in Secondary School Group.">
+                        參加加德士機械人工程師教室全港中小學機械人競賽2023，在投射挑戰賽、冰壺彈射對戰等多個項目中獲獎，並榮獲中學組全場總冠軍。
+                    </p>
+                    <a href="#" class="work-link" data-zh="查看詳情" data-en="View Details">查看詳情</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 獎項榮譽 -->
+    <section id="awards" class="section">
+        <h2 class="section-title" data-zh="獎項榮譽" data-en="Awards & Honors">獎項榮譽</h2>
+        
+        <h3 style="margin-bottom: 20px; color: var(--dark);" data-zh="國際/大灣區比賽獎項" data-en="International/Greater Bay Area Competition Awards">國際/大灣區比賽獎項</h3>
+        <div class="awards-container">
+            <div class="award-item">
+                <div class="award-title" data-zh="大灣區優秀學生推選2025 - 優良獎" data-en="Greater Bay Area Outstanding Students Award 2025 - Merit Award">大灣區優秀學生推選2025 - 優良獎</div>
+                <div class="award-detail" data-zh="高中組優良獎" data-en="High School Group Merit Award">高中組優良獎</div>
+                <div class="award-year">2025年9月</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="大灣區學界低空飛行應用個案挑戰賽 - 嘉許狀" data-en="Greater Bay Area Academic Low Altitude Flight Application Case Challenge - Certificate of Excellence">大灣區學界低空飛行應用個案挑戰賽 - 嘉許狀</div>
+                <div class="award-year">2024-2025</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="大灣區青少年AI及網絡安全挑戰賽 - 決賽優異獎" data-en="GBA Youth AI & Cyber Security Challenge - Finals Excellence Award">大灣區青少年AI及網絡安全挑戰賽 - 決賽優異獎</div>
+                <div class="award-year">2023-2024</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="國際希望杯數學邀請賽 - 優異獎" data-en="International Hope Cup Mathematics Invitational - Merit Winner">國際希望杯數學邀請賽 - 優異獎</div>
+                <div class="award-detail" data-zh="港澳賽區IHC Advanced Division" data-en="Hong Kong-Macau Region IHC Advanced Division">港澳賽區IHC Advanced Division</div>
+                <div class="award-year">2023-2024</div>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 40px; margin-bottom: 20px; color: var(--dark);" data-zh="本地及校際比賽獎項" data-en="Local & Inter-school Competition Awards">本地及校際比賽獎項</h3>
+        <div class="awards-container">
+            <div class="award-item">
+                <div class="award-title" data-zh="香港理工大學建造智慧城市比賽2025 - 亞軍" data-en="PolyU Build a Smart City Competition 2025 - First Runner-up">香港理工大學建造智慧城市比賽2025 - 亞軍</div>
+                <div class="award-detail" data-zh="空間數據挑戰在智慧城市項目" data-en="Spatial Data Challenge in Smart City Project">空間數據挑戰在智慧城市項目</div>
+                <div class="award-year">2025年9月</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="中文大學AI Hackathon 2025 - 優異獎" data-en="CUHK AI Hackathon 2025 - Certificate of Merit">中文大學AI Hackathon 2025 - 優異獎</div>
+                <div class="award-year">2025年</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="全港中學建造STEAM夏日營創意組裝比賽 - 季軍" data-en="Hong Kong Secondary School STEAM Summer Camp Creative Assembly Competition - 2nd Runner-up">全港中學建造STEAM夏日營創意組裝比賽 - 季軍</div>
+                <div class="award-year">2024-2025</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="香港中學IT知識挑戰賽 - 銅獎" data-en="Hong Kong Secondary School IT Knowledge Challenge - Bronze Award">香港中學IT知識挑戰賽 - 銅獎</div>
+                <div class="award-year">2023年</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="加德士機械人競賽2023 - 全場總冠軍" data-en="Caltex Robot Competition 2023 - Overall Champion">加德士機械人競賽2023 - 全場總冠軍</div>
+                <div class="award-year">2023年</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="建造STEAM夏日營創意設計比賽 - 優異獎" data-en="Construction STEAM Summer Camp Creative Design Competition - Merit Award">建造STEAM夏日營創意設計比賽 - 優異獎</div>
+                <div class="award-year">2023年</div>
+            </div>
+        </div>
+        
+        <h3 style="margin-top: 40px; margin-bottom: 20px; color: var(--dark);" data-zh="學業及服務獎項" data-en="Academic & Service Awards">學業及服務獎項</h3>
+        <div class="awards-container">
+            <div class="award-item">
+                <div class="award-title" data-zh="學業進步獎" data-en="Academic Improvement Award">學業進步獎</div>
+                <div class="award-detail" data-zh">2021-2022, 2022-2023, 2023-2024學年</div>
+                <div class="award-year">連續三年</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="優秀學長獎" data-en="Excellent Prefect Award">優秀學長獎</div>
+                <div class="award-detail" data-zh="2023-2024, 2024-2025學年" data-en="2023-2024, 2024-2025 Academic Years">2023-2024, 2024-2025學年</div>
+                <div class="award-year">多次獲獎</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh">有心學生嘉許狀" data-en="Heart to Heart Project Appreciation Certificate">有心學生嘉許狀</div>
+                <div class="award-detail" data-zh="香港青年協會青年義工網絡" data-en="Hong Kong Federation of Youth Groups Youth Volunteer Network">香港青年協會青年義工網絡</div>
+                <div class="award-year">2021-2024連續三年</div>
+            </div>
+            <div class="award-item">
+                <div class="award-title" data-zh="宗教科第一名" data-en="First in Religious Studies">宗教科第一名</div>
+                <div class="award-year">2023-2024</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁腳 -->
+    <footer class="footer">
+        <div class="footer-contact">
+            <a href="https://www.instagram.com/yy.ma.walker/?utm_source=qr" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span data-zh="Instagram" data-en="Instagram">Instagram</span>
+            </a>
+            <a href="https://wa.me/85264399498" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span data-zh="WhatsApp" data-en="WhatsApp">WhatsApp</span>
+            </a>
+            <a href="tel:+85264399498">
+                <i class="fas fa-phone"></i>
+                <span data-zh="電話" data-en="Phone">電話</span>
+            </a>
+        </div>
+        <div class="footer-divider"></div>
+        <p data-zh="© 2025 馬英源的個人主頁 | 保留所有權利" 
+           data-en="© 2025 Ma Ying Yuen's Personal Homepage | All Rights Reserved">
+           © 2025 馬英源的個人主頁 | 保留所有權利
+        </p>
+    </footer>
+
+    <script>
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 關閉移動端菜單（如果打開）
+                if (window.innerWidth <= 768) {
+                    navbarMenu.classList.remove('active');
+                }
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 語言切換功能
+        const langSwitch = document.getElementById('langSwitch');
+        let isTraditionalChinese = true;
+
+        langSwitch.addEventListener('click', function() {
+            isTraditionalChinese = !isTraditionalChinese;
+            const elements = document.querySelectorAll('[data-zh], [data-en]');
+            
+            elements.forEach(element => {
+                if (isTraditionalChinese) {
+                    element.textContent = element.getAttribute('data-zh');
+                    document.documentElement.lang = 'zh-HK';
+                    langSwitch.textContent = 'EN';
+                } else {
+                    element.textContent = element.getAttribute('data-en');
+                    document.documentElement.lang = 'en';
+                    langSwitch.textContent = '繁';
+                }
+            });
+        });
+        
+        // 導航欄滾動效果
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // 移動端菜單切換
+        const menuToggle = document.getElementById('menuToggle');
+        const navbarMenu = document.querySelector('.navbar-menu');
+        
+        menuToggle.addEventListener('click', function() {
+            navbarMenu.classList.toggle('active');
+        });
+        
+        // 元素進入視口時的動畫
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // 如果是技能條，啟動動畫
+                    if (entry.target.classList.contains('section') && entry.target.id === 'about') {
+                        setTimeout(() => {
+                            document.querySelectorAll('.skill-progress').forEach(progress => {
+                                progress.classList.add('animate');
+                            });
+                        }, 300);
+                    }
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // 觀察所有section元素
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
