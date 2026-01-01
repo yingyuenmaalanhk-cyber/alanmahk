@@ -1331,7 +1331,15 @@
             </div>
             
             <div class="hero-img-box">
-                <img src="https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-19/566058434_17985841283857824_8760511775696205046_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=100&_nc_oc=Q6cZ2QHByBvmPXod-xsr3mi5dCIqEYXd3DM2kHE6HY3SY5wVFYDcp3ClTogNZliSvJcKCk4&_nc_ohc=axOF8YduP1kQ7kNvwFuck2N&_nc_gid=Qe86Ud9zqt0KyAPPCvxxzA&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Afl8V25XgvA9uHMUsXv0GEZcdUrSTcMnlwdYTNEj6VUNyw&oe=694EF9F5&_nc_sid=7a9f4b" alt="Profile" class="hero-img">
+                <!-- 
+                    使用 GitHub 圖片鏈接：
+                    1. 將頭像上傳到 GitHub 倉庫的 images 文件夾
+                    2. 獲取 Raw 鏈接：https://raw.githubusercontent.com/你的用戶名/倉庫名/分支名/images/profile.jpg
+                    3. 或者使用 GitHub Pages：https://你的用戶名.github.io/images/profile.jpg
+                    4. 替換下面的 src 屬性
+                -->
+                <img src="https://github.com/yingyuenmaalanhk-cyber/alanmahk/blob/e83365cf208352d7691acdeb7ebfebaa2af14fd1/selfie.jpg" alt="Profile" class="hero-img" 
+                     onerror="this.src='https://via.placeholder.com/400?text=Profile+Image'; this.onerror=null;">
                 
                 <div class="hero-badge b1">
                     <i class="fas fa-city" style="color: #2563eb;"></i>
@@ -2084,7 +2092,9 @@
         // 照片輪播功能
         const photos = [
             {
-                src: 'https://scontent-hkg4-1.cdninstagram.com/v/t51.2885-19/566058434_17985841283857824_8760511775696205046_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=scontent-hkg4-1.cdninstagram.com&_nc_cat=100&_nc_oc=Q6cZ2QHByBvmPXod-xsr3mi5dCIqEYXd3DM2kHE6HY3SY5wVFYDcp3ClTogNZliSvJcKCk4&_nc_ohc=axOF8YduP1kQ7kNvwFuck2N&_nc_gid=Qe86Ud9zqt0KyAPPCvxxzA&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Afl8V25XgvA9uHMUsXv0GEZcdUrSTcMnlwdYTNEj6VUNyw&oe=694EF9F5&_nc_sid=7a9f4b',
+                // 使用 GitHub 圖片鏈接：https://raw.githubusercontent.com/你的用戶名/倉庫名/分支名/images/profile.jpg
+                // 或使用相對路徑：images/profile.jpg（如果圖片在同一個倉庫中）
+                src: 'images/profile.jpg',
                 title: '個人頭像',
                 desc: 'Ma Ying Yuen'
             },
@@ -2247,4 +2257,3 @@
     </script>
 </body>
 </html>
-
