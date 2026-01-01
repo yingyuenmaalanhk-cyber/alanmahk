@@ -21,7 +21,11 @@
             --gray: #64748b;
             --light-gray: #e2e8f0;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --shadow-lg: 0 20px 60px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
         }
         
         body {
@@ -29,6 +33,57 @@
             color: var(--dark);
             line-height: 1.6;
             scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        
+        /* 滾動進度條 */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gradient-primary);
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+        
+        /* 粒子背景容器 */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translateY(-100px) translateX(50px) rotate(90deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-200px) translateX(-50px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translateY(-100px) translateX(-100px) rotate(270deg);
+                opacity: 0.6;
+            }
         }
         
         /* 導航欄 */
@@ -44,9 +99,12 @@
         }
         
         .navbar.scrolled {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             box-shadow: var(--shadow);
             padding: 10px 0;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
         }
         
         .navbar-container {
@@ -129,7 +187,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--gradient-hero);
             color: white;
             text-align: center;
             padding-top: 50px;
@@ -145,6 +203,36 @@
             width: 100%;
             height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: patternMove 20s linear infinite;
+        }
+        
+        @keyframes patternMove {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(60px, 60px);
+            }
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
         
         .hero-content {
@@ -168,15 +256,40 @@
             width: 180px;
             height: 180px;
             border-radius: 50%;
-            border: 5px solid white;
+            border: 5px solid rgba(255, 255, 255, 0.3);
             margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             transition: var(--transition);
             object-fit: cover;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
         }
         
         .hero img:hover {
-            transform: scale(1.05);
+            transform: scale(1.1) rotate(5deg);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+        
+        .hero img::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
         }
         
         .hero h1 {
@@ -196,21 +309,48 @@
         
         .btn {
             display: inline-block;
-            background-color: white;
-            color: var(--primary);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
             padding: 12px 30px;
             border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
             transition: var(--transition);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn:hover {
-            background-color: var(--dark);
-            color: white;
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn span {
+            position: relative;
+            z-index: 1;
         }
         
         /* 內容板塊 */
@@ -332,17 +472,37 @@
         }
         
         .experience-card {
-            background-color: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 30px;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border-top: 4px solid var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .experience-card:hover::before {
+            transform: scaleY(1);
         }
         
         .experience-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(59, 130, 246, 0.3);
         }
         
         .experience-card h3 {
@@ -376,17 +536,37 @@
         }
         
         .work-card {
-            background-color: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
             position: relative;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .work-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .work-card:hover::after {
+            opacity: 0.05;
         }
         
         .work-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(59, 130, 246, 0.3);
         }
         
         .work-img {
@@ -463,8 +643,8 @@
         }
         
         .hobby-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
         }
         
         .hobby-item i {
@@ -491,11 +671,28 @@
         
         /* 頁腳 */
         .footer {
-            background-color: var(--dark);
+            background: linear-gradient(135deg, var(--dark) 0%, #0f172a 100%);
             color: white;
             text-align: center;
             padding: 60px 0 30px;
             margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        }
+        
+        .footer > * {
+            position: relative;
+            z-index: 1;
         }
         
         .footer-contact {
@@ -522,6 +719,8 @@
         .footer-contact a:hover {
             color: var(--primary);
             background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
         }
         
         .footer-contact i {
@@ -550,7 +749,8 @@
                 top: 70px;
                 left: 0;
                 width: 100%;
-                background-color: white;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
                 flex-direction: column;
                 padding: 20px;
                 box-shadow: var(--shadow);
@@ -596,6 +796,41 @@
             .footer-contact {
                 flex-direction: column;
                 align-items: center;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 36px;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .particles-container {
+                display: none; /* 移動端隱藏粒子以提升性能 */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero img {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .work-card, .experience-card {
+                margin: 0 10px;
             }
         }
         
@@ -693,6 +928,171 @@
             font-weight: 500;
             margin-top: 10px;
         }
+        
+        /* 返回頂部按鈕 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            z-index: 999;
+            font-size: 20px;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+        }
+        
+        .back-to-top.visible {
+            display: flex;
+        }
+        
+        /* 統計數據展示 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        /* 時間軸設計 */
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-primary);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+            width: 50%;
+            padding: 0 40px;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+            padding-right: 60px;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+            padding-left: 60px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            top: 0;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .timeline-content:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content:hover {
+            transform: translateX(-10px);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                text-align: left !important;
+                padding-left: 60px !important;
+                padding-right: 0 !important;
+            }
+            
+            .timeline-dot {
+                left: 10px !important;
+            }
+            
+            .timeline-content:hover {
+                transform: translateX(5px) !important;
+            }
+        }
     </style>
     <!-- 引入圖標庫 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -700,6 +1100,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 滾動進度條 -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- 粒子背景 -->
+    <div class="particles-container" id="particlesContainer"></div>
+    
+    <!-- 返回頂部按鈕 -->
+    <button class="back-to-top" id="backToTop" aria-label="返回頂部">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
     <!-- 導航欄 -->
     <nav class="navbar">
         <div class="navbar-container">
@@ -730,13 +1141,34 @@
                data-en="Form 6D Student at S.K.H. Bishop Baker Secondary School | Passionate about STEAM and Programming | Explorer in Engineer">
                聖公會白約翰會督中學 6D班學生 | 熱愛STEM及程式設計 | 工程探索者
             </p>
-            <a href="#about" class="btn" data-zh="瞭解更多" data-en="Learn More">瞭解更多</a>
+            <a href="#about" class="btn" data-zh="瞭解更多" data-en="Learn More"><span>瞭解更多</span></a>
         </div>
     </section>
 
     <!-- 關於我 -->
     <section id="about" class="section">
         <h2 class="section-title" data-zh="關於我" data-en="About Me">關於我</h2>
+        
+        <!-- 統計數據展示 -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" data-count="20">0</div>
+                <div class="stat-label" data-zh="獲獎次數" data-en="Awards">獲獎次數</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="3">0</div>
+                <div class="stat-label" data-zh="領導職務" data-en="Leadership Roles">領導職務</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="7">0</div>
+                <div class="stat-label" data-zh="年服務經驗" data-en="Years of Service">年服務經驗</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="15">0</div>
+                <div class="stat-label" data-zh="參與項目" data-en="Projects">參與項目</div>
+            </div>
+        </div>
+        
         <div class="about-container">
             <div class="about-text">
                 <h3 data-zh="個人簡介" data-en="Personal Introduction">個人簡介</h3>
@@ -875,30 +1307,39 @@
     <!-- 經歷/項目 -->
     <section id="experience" class="section">
         <h2 class="section-title" data-zh="我的經歷" data-en="My Experience">我的經歷</h2>
-        <div class="experience-container">
-            <div class="experience-card">
-                <h3 data-zh="副領袖生長" data-en="Vice Head Prefect">副領袖生長</h3>
-                <div class="experience-date" data-zh="2022-2025" data-en="2022-2025">2022-2025</div>
-                <p data-zh="自中三起擔任領袖生，後晉升為副領袖生長，多次獲得優秀領袖生獎和模範領袖生獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感 ，亦幫助學校創建領袖生點名系統(https://miteen.hk/attendance/attlogin)，極大方便老師檢視領袖生當值情況。" 
-                   data-en="Started serving as a student leader in Form 3 and later promoted to deputy head student, receiving multiple Outstanding Student Leader and Model Student Leader awards. Responsible for assisting with school discipline management and organizing activities, which helped develop leadership skills and a sense of responsibility. Also contributed to creating the student leader attendance system (https://miteen.hk/attendance/attlogin), greatly facilitating teachers in checking student leader duty status.">
-                   自中三起擔任領袖生，後晉升為副領袖生長，多次獲得優秀領袖生獎和模範領袖生獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感 ，亦幫助學校創建領袖生點名系統(https://miteen.hk/attendance/attlogin)，極大方便老師檢視領袖生當值情況。
-                </p>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 data-zh="副領袖生長" data-en="Vice Head Prefect">副領袖生長</h3>
+                    <div class="experience-date" data-zh="2022-2025" data-en="2022-2025">2022-2025</div>
+                    <p data-zh="自中三起擔任領袖生，後晉升為副領袖生長，多次獲得優秀領袖生獎和模範領袖生獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感 ，亦幫助學校創建領袖生點名系統(https://miteen.hk/attendance/attlogin)，極大方便老師檢視領袖生當值情況。" 
+                       data-en="Started serving as a student leader in Form 3 and later promoted to deputy head student, receiving multiple Outstanding Student Leader and Model Student Leader awards. Responsible for assisting with school discipline management and organizing activities, which helped develop leadership skills and a sense of responsibility. Also contributed to creating the student leader attendance system (https://miteen.hk/attendance/attlogin), greatly facilitating teachers in checking student leader duty status.">
+                       自中三起擔任領袖生，後晉升為副領袖生長，多次獲得優秀領袖生獎和模範領袖生獎。負責協助學校紀律管理、組織活動，培養了領導能力和責任感 ，亦幫助學校創建領袖生點名系統(https://miteen.hk/attendance/attlogin)，極大方便老師檢視領袖生當值情況。
+                    </p>
+                </div>
             </div>
-            <div class="experience-card">
-                <h3 data-zh="社區義工" data-en="Community volunteer">社區義工</h3>
-                <div class="experience-date" data-zh="2018-2025" data-en="2018-2025">2018-2025</div>
-                <p data-zh="主動參與各類社區義工活動，例如為同心村的孩子提供一對一學業輔導，耐心講解工作難點、分享趣味學習方法； 協助校內低年級新生融入校園，帶領他們熟悉教學樓、操場等場地，組織互動小遊戲拉近距離； 針對低年級學生的數學疑難點，主動梳理解題思路、整理易錯題型，用通俗的表達幫他們攻克學習障礙，全程用心陪伴、積極溝通，助力他人成長。" 
-                   data-en="Actively participated in various community volunteer activities, such as providing one-on-one academic tutoring for children in Tongxin Village, patiently explaining difficult points in their work and sharing fun learning methods; assisting new lower-grade students in the school to integrate into campus life by guiding them to familiarize with teaching buildings, playgrounds, and other areas, and organizing interactive small games to build closer relationships; proactively addressing lower-grade students’ difficulties in math by clarifying problem-solving approaches, organizing commonly made mistakes, and using simple explanations to help them overcome learning obstacles, providing attentive support and active communication throughout, contributing to others’ growth.">
-                   主動參與各類社區義工活動，例如為同心村的孩子提供一對一學業輔導，耐心講解工作難點、分享趣味學習方法； 協助校內低年級新生融入校園，帶領他們熟悉教學樓、操場等場地，組織互動小遊戲拉近距離； 針對低年級學生的數學疑難點，主動梳理解題思路、整理易錯題型，用通俗的表達幫他們攻克學習障礙，全程用心陪伴、積極溝通，助力他人成長。
-                </p>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 data-zh="Mi Teen 學會主席及成員" data-en="Mi Teen Academy Chairperson & Member">Mi Teen 學會主席及成員</h3>
+                    <div class="experience-date" data-zh="2022-2025" data-en="2022-2025">2022-2025</div>
+                    <p data-zh="擔任Mi Teen 學會主席及成員，統籌規劃並帶領團隊開展各類STEAM相關工作：一方面策劃並舉辦校內外STEAM主題講座、創意工作坊、科技競賽等活動，激發同學們對跨學科領域的探索熱情；另一方面帶領團隊開展校內STEAM創意項目研發，聚焦生活場景與趣味互動，先後推動智能跑步機（融合傳感器技術與數據分析）、自動抓娃娃機（整合機械結構設計與編程控制）、投籃計分機（結合電子電路與算法優化）等項目落地，全程參與構思、設計、組裝、調試全流程，同時協調團隊分工、整合技術資源，助力學會形成「理論學習+實踐創新」的良性發展模式。" 
+                       data-en="Served as the president and a member of Mi Teen Society, coordinating and leading the team in various STEAM-related initiatives. On one hand, I planned and organized STEAM-themed lectures, creative workshops, and technology competitions both on and off campus, inspiring students' passion for interdisciplinary exploration. On the other hand, I led the team in developing campus STEAM creative projects, focusing on everyday life scenarios and interactive fun. We successfully implemented projects such as a smart treadmill (integrating sensor technology and data analysis), an automatic claw machine (combining mechanical structure design and programming control), and a basketball scoring machine (merging electronic circuits with algorithm optimization). I was involved throughout the entire process, from conceptualization, design, assembly, to debugging, while coordinating team responsibilities and integrating technical resources, helping the society establish a sustainable model of 'theoretical learning + practical innovation'.">
+                       擔任Mi Teen 學會主席及成員，統籌規劃並帶領團隊開展各類STEAM相關工作：一方面策劃並舉辦校內外STEAM主題講座、創意工作坊、科技競賽等活動，激發同學們對跨學科領域的探索熱情；另一方面帶領團隊開展校內STEAM創意項目研發，聚焦生活場景與趣味互動，先後推動智能跑步機（融合傳感器技術與數據分析）、自動抓娃娃機（整合機械結構設計與編程控制）、投籃計分機（結合電子電路與算法優化）等項目落地，全程參與構思、設計、組裝、調試全流程，同時協調團隊分工、整合技術資源，助力學會形成「理論學習+實踐創新」的良性發展模式。
+                    </p>
+                </div>
             </div>
-            <div class="experience-card">
-                <h3 data-zh="Mi Teen 學會主席及成員" data-en="Mi Teen Academy Chairperson & Member">Mi Teen 學會及成員</h3>
-                <div class="experience-date" data-zh="2022-2025" data-en="2022-2025">2022-2025</div>
-                <p data-zh="擔任Mi Teen 學會主席及成員， 統籌規劃並帶領團隊開展各類STEAM相關工作，一方面策劃並舉辦校內外STEAM主題講座、創意工作坊、科技競賽等活動，激發同學們對跨學科領域的探索熱情；另一方面帶領團隊開展校內STEAM創意項目研發，聚焦生活場景與趣味互動，先後推動智能跑步機（融合傳感器技術與數據分析）、自動抓娃娃機（整合機械結構設計與編程控制）、投籃計分機（結合電子電路與算法優化）等項目落地，全程參與構思、設計、組裝、調試全流程，同時協調團隊分工、整合技術資源，助力學會形成「理論學習+實踐創新」的良性發展模式。" 
-                   data-en="Served as the president and a member of Mi Teen Society, coordinating and leading the team in various STEAM-related initiatives. On one hand, I planned and organized STEAM-themed lectures, creative workshops, and technology competitions both on and off campus, inspiring students' passion for interdisciplinary exploration. On the other hand, I led the team in developing campus STEAM creative projects, focusing on everyday life scenarios and interactive fun. We successfully implemented projects such as a smart treadmill (integrating sensor technology and data analysis), an automatic claw machine (combining mechanical structure design and programming control), and a basketball scoring machine (merging electronic circuits with algorithm optimization). I was involved throughout the entire process, from conceptualization, design, assembly, to debugging, while coordinating team responsibilities and integrating technical resources, helping the society establish a sustainable model of 'theoretical learning + practical innovation'.">
-                   擔任Mi Teen 學會主席及成員，統籌規劃並帶領團隊開展各類STEAM相關工作：一方面策劃並舉辦校內外STEAM主題講座、創意工作坊、科技競賽等活動，激發同學們對跨學科領域的探索熱情；另一方面帶領團隊開展校內STEAM創意項目研發，聚焦生活場景與趣味互動，先後推動智能跑步機（融合傳感器技術與數據分析）、自動抓娃娃機（整合機械結構設計與編程控制）、投籃計分機（結合電子電路與算法優化）等項目落地，全程參與構思、設計、組裝、調試全流程，同時協調團隊分工、整合技術資源，助力學會形成「理論學習+實踐創新」的良性發展模式。
-                </p>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3 data-zh="社區義工" data-en="Community volunteer">社區義工</h3>
+                    <div class="experience-date" data-zh="2018-2025" data-en="2018-2025">2018-2025</div>
+                    <p data-zh="主動參與各類社區義工活動，例如為同心村的孩子提供一對一學業輔導，耐心講解工作難點、分享趣味學習方法； 協助校內低年級新生融入校園，帶領他們熟悉教學樓、操場等場地，組織互動小遊戲拉近距離； 針對低年級學生的數學疑難點，主動梳理解題思路、整理易錯題型，用通俗的表達幫他們攻克學習障礙，全程用心陪伴、積極溝通，助力他人成長。" 
+                       data-en="Actively participated in various community volunteer activities, such as providing one-on-one academic tutoring for children in Tongxin Village, patiently explaining difficult points in their work and sharing fun learning methods; assisting new lower-grade students in the school to integrate into campus life by guiding them to familiarize with teaching buildings, playgrounds, and other areas, and organizing interactive small games to build closer relationships; proactively addressing lower-grade students' difficulties in math by clarifying problem-solving approaches, organizing commonly made mistakes, and using simple explanations to help them overcome learning obstacles, providing attentive support and active communication throughout, contributing to others' growth.">
+                       主動參與各類社區義工活動，例如為同心村的孩子提供一對一學業輔導，耐心講解工作難點、分享趣味學習方法； 協助校內低年級新生融入校園，帶領他們熟悉教學樓、操場等場地，組織互動小遊戲拉近距離； 針對低年級學生的數學疑難點，主動梳理解題思路、整理易錯題型，用通俗的表達幫他們攻克學習障礙，全程用心陪伴、積極溝通，助力他人成長。
+                    </p>
+                </div>
             </div>
         </div>
     </section>
@@ -1048,13 +1489,103 @@
     </footer>
 
     <script>
+        // 創建粒子背景
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 100 + 50;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // 滾動進度條
+        function updateScrollProgress() {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+        }
+        
+        // 返回頂部按鈕
+        const backToTop = document.getElementById('backToTop');
+        
+        function toggleBackToTop() {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+        
+        if (backToTop) {
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // 統計數字動畫
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-count'));
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+        }
+        
+        // 觀察統計區域
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        // 移動端菜單切換（提前定義以便後續使用）
+        const menuToggle = document.getElementById('menuToggle');
+        const navbarMenu = document.querySelector('.navbar-menu');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function() {
+                navbarMenu.classList.toggle('active');
+            });
+        }
+        
         // 平滑滾動
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 
                 // 關閉移動端菜單（如果打開）
-                if (window.innerWidth <= 768) {
+                if (window.innerWidth <= 768 && navbarMenu) {
                     navbarMenu.classList.remove('active');
                 }
                 
@@ -1095,13 +1626,6 @@
             }
         });
         
-        // 移動端菜單切換
-        const menuToggle = document.getElementById('menuToggle');
-        const navbarMenu = document.querySelector('.navbar-menu');
-        
-        menuToggle.addEventListener('click', function() {
-            navbarMenu.classList.toggle('active');
-        });
         
         // 元素進入視口時的動畫
         const observerOptions = {
@@ -1133,7 +1657,23 @@
         document.querySelectorAll('.section').forEach(section => {
             observer.observe(section);
         });
+        
+        // 觀察統計區域
+        const statsSection = document.querySelector('.stats-container');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+        
+        // 滾動事件監聽
+        window.addEventListener('scroll', function() {
+            updateScrollProgress();
+            toggleBackToTop();
+        });
+        
+        // 初始化
+        createParticles();
+        updateScrollProgress();
+        toggleBackToTop();
     </script>
 </body>
 </html>
-
