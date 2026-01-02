@@ -245,28 +245,6 @@
             box-shadow: 0 0 20px rgba(0, 243, 255, 1);
         }
         
-        .scroll-progress-tooltip {
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 10, 26, 0.95);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--neon-blue);
-            border-radius: 8px;
-            padding: 8px 16px;
-            color: var(--neon-blue);
-            font-size: 0.85rem;
-            font-weight: 600;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 1001;
-        }
-        
-        .scroll-progress-tooltip.visible {
-            opacity: 1;
-        }
 
         h1, h2, h3, h4 { 
             font-family: "Orbitron", "Plus Jakarta Sans", sans-serif; 
@@ -277,32 +255,39 @@
         a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
         ul { list-style: none; }
 
-        /* --- 2. 導航欄 (Navbar) - 懸浮式磨砂玻璃效果 --- */
+        /* --- 2. 導航欄 (Navbar) - 統一容器，Flex布局 --- */
         .navbar {
             position: fixed; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: calc(100% - 40px); 
-            max-width: 1400px; 
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
             z-index: 1000;
-            padding: 15px 25px; 
-            background: rgba(10, 10, 26, 0.3); 
-            backdrop-filter: blur(20px); 
+            padding: 0;
+            background: rgba(10, 10, 26, 0.85); 
+            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 243, 255, 0.2); 
-            border-radius: 20px; 
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2); 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
+        
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
         .navbar.scrolled { 
-            top: 10px; 
-            padding: 12px 20px; 
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 243, 255, 0.15);
-            border-color: rgba(0, 243, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            border-bottom-color: rgba(0, 243, 255, 0.3);
+        }
+        
+        .navbar.scrolled .navbar-container {
+            padding: 12px 25px;
         }
         .logo { 
             font-family: 'Orbitron', sans-serif;
@@ -316,14 +301,27 @@
             letter-spacing: 2px;
         }
         
-        .nav-links { display: flex; gap: 30px; }
+        .nav-links { 
+            display: flex;
+            gap: 30px; 
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0;
+        }
+        
         .nav-links a { 
             font-size: 0.95rem; 
             font-weight: 500; 
             color: var(--text-light); 
-            position: relative; 
+            position: relative;
             padding: 5px 15px;
             border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
         .nav-links a:hover, .nav-links a.active { 
             color: var(--neon-blue); 
@@ -442,11 +440,11 @@
             display: inline-block; 
         }
         .hero-text .highlight::after { 
-            content: ''; 
-            position: absolute; 
+            content: '';
+            position: absolute;
             bottom: 5px; 
-            left: 0; 
-            width: 100%; 
+            left: 0;
+            width: 100%;
             height: 12px; 
             background: rgba(0, 243, 255, 0.2); 
             z-index: -1; 
@@ -555,7 +553,7 @@
 
         /* --- 3D Hero Badge System (Random Walk Edition) --- */
         .hero-img-box { 
-            position: relative; 
+            position: relative;
             perspective: 1500px; /* 3D 透視 */
             transform-style: preserve-3d;
             z-index: 1;
@@ -792,22 +790,139 @@
         }
 
         /* --- 5. About Me --- */
-        .about-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: start; }
+        .about-grid { 
+            display: grid; 
+            grid-template-columns: 1.2fr 0.8fr; 
+            gap: 60px; 
+            align-items: start; 
+            position: relative;
+        }
+        
+        /* About Me背景裝飾 */
+        .about-grid::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .info-card { 
-            background: rgba(10, 10, 26, 0.6); 
-            backdrop-filter: blur(10px);
-            padding: 40px; 
+            background: rgba(10, 10, 26, 0.7); 
+            backdrop-filter: blur(15px);
+            padding: 50px; 
             border-radius: var(--radius-lg); 
-            box-shadow: var(--shadow-sm); 
-            border: 1px solid rgba(0, 243, 255, 0.2); 
+            box-shadow: var(--shadow-md); 
+            border: 1px solid rgba(0, 243, 255, 0.3); 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        
+        .about-hook {
+            font-size: 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+            line-height: 1.2;
+        }
+        
+        .about-cta {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .about-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+            flex-wrap: wrap;
+        }
+        
+        .about-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .about-stat-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+        }
+        
+        .about-stat-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .about-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .about-stat-label {
+            font-size: 0.85rem;
+            color: var(--slate);
         }
         .recommendation-box { 
             margin-top: 30px; 
-            background: linear-gradient(145deg, rgba(0, 243, 255, 0.1), rgba(157, 78, 221, 0.1)); 
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(15px);
             padding: 30px;
             border-radius: var(--radius-md); 
-            border-left: 4px solid var(--neon-blue); 
+            border: 1px solid rgba(0, 243, 255, 0.3);
             position: relative;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+        
+        .recommendation-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px 0 0 4px;
         }
         .quote-icon { 
             font-size: 2rem; 
@@ -890,7 +1005,13 @@
         }
 
         /* --- 6. Bento Grid (Interests) --- */
-        .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px); gap: 20px; }
+        .bento-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-template-rows: repeat(2, 200px); 
+            gap: 20px; 
+        }
+        
         .bento-item { 
             background: rgba(10, 10, 26, 0.6); 
             backdrop-filter: blur(10px);
@@ -900,60 +1021,379 @@
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
-            transition: all 0.3s; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid rgba(0, 243, 255, 0.2); 
             overflow: hidden; 
-            position: relative; 
+            position: relative;
+            cursor: pointer;
         }
+        
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 243, 255, 0.05);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
         .bento-item:hover { 
-            transform: translateY(-5px); 
-            box-shadow: var(--shadow-md); 
-            border-color: rgba(0, 243, 255, 0.4);
+            transform: translateY(-8px) rotateX(2deg) rotateY(-2deg); 
+            box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 243, 255, 0.3); 
+            border-color: rgba(0, 243, 255, 0.5);
         }
+        
+        .bento-item:hover::before {
+            opacity: 1;
+        }
+        
+        .bento-item:hover .bento-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 非均勻網格佈局 */
+        .bento-item.small {
+            grid-column: span 1;
+            grid-row: span 1;
+        }
+        
+        .bento-item.medium {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+        
         .bento-item.large { 
             grid-column: span 2; 
-            background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(157, 78, 221, 0.2)); 
+            grid-row: span 2;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.15), rgba(157, 78, 221, 0.15)); 
             color: var(--text-light); 
             border-color: var(--neon-blue);
         }
+        
         .bento-item.large .bento-desc { color: rgba(226, 232, 240, 0.9); }
         .bento-item.large i { color: rgba(0, 243, 255, 0.3); }
-        .bento-icon { font-size: 2.5rem; color: rgba(0, 243, 255, 0.2); align-self: flex-start; margin-bottom: 15px; }
-        .bento-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; color: var(--text-light); }
-        .bento-desc { font-size: 0.9rem; color: var(--text-light); line-height: 1.5; }
+        
+        /* 地圖組件樣式 */
+        .bento-item.map-widget {
+            background: rgba(10, 10, 26, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bento-item.map-widget::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.5;
+            }
+        }
+        
+        .bento-icon { 
+            font-size: 2.5rem; 
+            color: rgba(0, 243, 255, 0.3); 
+            align-self: flex-start; 
+            margin-bottom: 15px; 
+            transition: all 0.3s;
+        }
+        
+        .bento-item:hover .bento-icon {
+            color: var(--neon-blue);
+            transform: scale(1.1);
+        }
+        
+        .bento-title { 
+            font-size: 1.2rem; 
+            font-weight: 700; 
+            margin-bottom: 10px; 
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+        
+        .bento-item:hover .bento-title {
+            color: var(--neon-blue);
+        }
+        
+        .bento-desc { 
+            font-size: 0.9rem; 
+            color: var(--text-light); 
+            line-height: 1.5;
+            opacity: 0.8;
+            transform: translateY(10px);
+            transition: all 0.4s;
+        }
+        
+        .bento-item:hover .bento-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 座右銘樣式 */
+        .bento-item.quote {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 243, 255, 0.1));
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-style: italic;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+        }
+        
+        .bento-item.quote .bento-desc {
+            font-size: 1.1rem;
+            color: var(--neon-blue);
+            font-weight: 500;
+        }
 
-        /* --- 7. Experience (Timeline) --- */
-        .timeline-container { display: flex; flex-direction: column; gap: 30px; }
+        /* --- 7. Experience (Timeline) - 垂直發光時間軸 --- */
+        .timeline-container { 
+            position: relative;
+            padding-left: 50px;
+            display: flex; 
+            flex-direction: column; 
+            gap: 50px; 
+        }
+        
+        /* 時間軸中線 */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary-gradient);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        
         .exp-card { 
-            background: rgba(10, 10, 26, 0.6); 
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 26, 0.7); 
+            backdrop-filter: blur(15px);
             border-radius: var(--radius-md); 
-            padding: 30px; 
-            box-shadow: var(--shadow-sm); 
-            border-left: 5px solid var(--neon-blue); 
-            display: grid;
-            grid-template-columns: 200px 1fr; 
-            gap: 30px;
-            transition: all 0.3s; 
-            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 35px; 
+            box-shadow: var(--shadow-md); 
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: 30px;
         }
+        
+        /* 時間軸節點 */
+        .exp-card::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
+            border: 4px solid rgba(10, 10, 26, 0.9);
+            z-index: 2;
+            transition: all 0.4s;
+        }
+        
+        .exp-card:hover::before {
+            transform: scale(1.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 1);
+        }
+        
+        /* 連接線 */
+        .exp-card::after {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 40px;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-gradient);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+        
         .exp-card:hover { 
-            box-shadow: var(--shadow-lg); 
-            transform: translateY(-3px); 
-            border-color: rgba(0, 243, 255, 0.4);
+            box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 243, 255, 0.4); 
+            transform: translateX(10px) translateY(-5px);
+            border-color: rgba(0, 243, 255, 0.6);
         }
-        .exp-header h3 { font-size: 1.25rem; margin-bottom: 5px; color: var(--text-light); }
+        
+        .exp-card.visible {
+            animation: slideInFromLeft 0.6s ease-out;
+        }
+        
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .exp-header { 
+            margin-bottom: 15px;
+        }
+        
+        .exp-header h3 { 
+            font-size: 1.4rem; 
+            margin-bottom: 8px; 
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
         .exp-tag { 
-            background: rgba(0, 243, 255, 0.1); 
+            background: rgba(0, 243, 255, 0.15); 
             color: var(--neon-blue); 
-            padding: 4px 12px; 
-            border-radius: 6px; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
             font-size: 0.85rem; 
             font-weight: 600; 
             display: inline-block; 
-            border: 1px solid rgba(0, 243, 255, 0.3);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
         }
-        .exp-content p { color: var(--text-light); font-size: 0.95rem; }
+        
+        .exp-content { 
+            margin-top: 15px;
+        }
+        
+        .exp-content p { 
+            color: var(--text-light); 
+            font-size: 1rem; 
+            line-height: 1.7;
+        }
+        
+        /* 關鍵成就列表 */
+        .exp-achievements {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .exp-achievements ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .exp-achievements li {
+            color: var(--text-light);
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .exp-achievements li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+        
+        /* 服務卡片 - 3D懸浮效果 */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .service-card {
+            background: rgba(10, 10, 26, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.8;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .service-card:hover {
+            opacity: 1;
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg), 0 0 50px rgba(0, 243, 255, 0.4);
+            border-color: rgba(0, 243, 255, 0.5);
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-icon {
+            font-size: 4rem;
+            color: rgba(0, 243, 255, 0.3);
+            margin-bottom: 20px;
+            transition: all 0.4s;
+        }
+        
+        .service-card:hover .service-icon {
+            color: var(--neon-blue);
+            transform: scale(1.1);
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .service-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .service-tech-item {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+        }
 
         /* --- 8. Works (Cards) --- */
         /* 項目篩選欄 */
@@ -1039,8 +1479,8 @@
             color: var(--neon-blue); 
             font-weight: 600; 
             font-size: 0.9rem; 
-            display: flex; 
-            align-items: center; 
+            display: flex;
+            align-items: center;
             gap: 5px; 
             cursor: pointer;
         }
@@ -1225,7 +1665,7 @@
         .awards-tabs-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
         .award-tab { 
             padding: 10px 20px; 
-            border-radius: 20px; 
+            border-radius: 20px;
             border: 1px solid rgba(0, 243, 255, 0.3); 
             background: rgba(10, 10, 26, 0.6); 
             backdrop-filter: blur(10px);
@@ -1515,11 +1955,11 @@
         
         /* --- 10. Footer - 懸浮式圓形圖標陣列 --- */
         
-        .footer { 
+        .footer {
             background: linear-gradient(135deg, #0A0A1A 0%, #1A0A2A 100%); 
             color: var(--text-light); 
             padding: 80px 20px 30px; 
-            text-align: center; 
+            text-align: center;
             margin-top: 100px; 
             position: relative;
             overflow: hidden;
@@ -1622,7 +2062,7 @@
         
         .footer-social { 
             display: flex; 
-            justify-content: center; 
+            justify-content: center;
             gap: 30px; 
             margin-bottom: 40px; 
             position: relative;
@@ -1635,8 +2075,8 @@
             backdrop-filter: blur(10px);
             border: 2px solid var(--neon-blue);
             border-radius: 50%; 
-            display: flex; 
-                align-items: center;
+            display: flex;
+            align-items: center;
             justify-content: center; 
             font-size: 24px; 
             color: var(--neon-blue);
@@ -1689,7 +2129,7 @@
         }
         
         .social-link .platform-name {
-            position: absolute;
+                position: absolute;
             bottom: -30px;
             left: 50%;
             transform: translateX(-50%);
@@ -1747,10 +2187,10 @@
             height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--neon-blue), var(--electronic-purple));
-            border: none;
+                border: none;
             color: white;
-            font-size: 24px;
-            cursor: pointer;
+                font-size: 24px;
+                cursor: pointer;
             box-shadow: 0 0 30px rgba(0, 243, 255, 0.5), 0 0 60px rgba(157, 78, 221, 0.3);
             transition: all 0.3s ease;
             position: relative;
@@ -1779,7 +2219,7 @@
             bottom: 80px;
             right: 0;
             display: flex;
-            flex-direction: column;
+                flex-direction: column;
             gap: 15px;
             opacity: 0;
             visibility: hidden;
@@ -1804,7 +2244,7 @@
             font-size: 20px;
             cursor: pointer;
             display: flex;
-            align-items: center;
+                align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
             position: relative;
@@ -2091,11 +2531,11 @@
             }
             
             .fab-main {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-            }
-            
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+        
             .fab-item {
                 width: 45px;
                 height: 45px;
@@ -2165,7 +2605,7 @@
         @media (max-width: 900px) {
             .hero-container { 
                 grid-template-columns: 1fr; 
-                gap: 30px;
+            gap: 30px;
             }
             .hero-text { 
                 text-align: center; 
@@ -2196,7 +2636,7 @@
             .footer-content {
                 grid-template-columns: 1fr;
                 gap: 30px;
-                text-align: center;
+            text-align: center;
             }
             
             .footer-bottom {
@@ -2235,41 +2675,124 @@
                 font-size: 1.8rem;
             }
             
-            .navbar { width: 95%; top: auto; bottom: 20px; padding: 12px 20px; }
-            .navbar.scrolled { bottom: 20px; }
-            .nav-links { display: none; }
-            .nav-controls { margin-left: auto; }
-            .menu-btn { display: block; }
+            .mobile-device .about-hook {
+                font-size: 1.8rem;
+            }
+            
+            .mobile-device .about-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .mobile-device .about-cta {
+                flex-direction: column;
+            }
+            
+            .mobile-device .about-cta .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .mobile-device .timeline-container {
+                padding-left: 30px;
+            }
+            
+            .mobile-device .timeline-container::before {
+                left: 10px;
+                width: 2px;
+            }
+            
+            .mobile-device .exp-card {
+                margin-left: 20px;
+            }
+            
+            .mobile-device .exp-card::before {
+                left: -30px;
+                width: 15px;
+                height: 15px;
+            }
+            
+            .mobile-device .exp-card::after {
+                left: -20px;
+                width: 20px;
+            }
+            
+            .mobile-device .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-device .bento-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            
+            .mobile-device .bento-item.large,
+            .mobile-device .bento-item.medium {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            
+            /* 手機版：隱藏桌面導航，顯示漢堡菜單 */
+            .navbar {
+            top: 0;
+                border-radius: 0;
+            }
+            
+            .navbar-container {
+                padding: 12px 20px;
+            }
+            
+            .nav-links { 
+                display: none !important; 
+            }
+            
+            .nav-controls { 
+                margin-left: auto; 
+            }
+            
+            .menu-btn { 
+                display: block !important; 
+            }
+            
+            /* 手機版導航菜單 - 全屏遮罩 */
             .nav-links.mobile-active { 
-                display: flex; 
+                display: flex !important; 
                 flex-direction: column; 
                 position: fixed; 
-                bottom: 80px; 
-                left: 50%;
-                transform: translateX(-50%);
-                width: calc(100% - 40px);
-                max-width: 400px;
-                max-height: 70vh;
+                top: 70px;
+            left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+                max-height: calc(100vh - 70px);
                 overflow-y: auto;
                 background: rgba(10, 10, 26, 0.98); 
                 backdrop-filter: blur(20px);
-                padding: 20px;
-                border-radius: 20px; 
-                box-shadow: 0 -10px 30px rgba(0, 243, 255, 0.2); 
+                padding: 40px 20px;
                 text-align: center; 
-                border: 1px solid rgba(0, 243, 255, 0.3);
+                border-top: 1px solid rgba(0, 243, 255, 0.3);
                 z-index: 1000;
+                gap: 0;
             }
             
             .nav-links.mobile-active li {
-                margin: 10px 0;
+                margin: 0;
+                width: 100%;
             }
             
             .nav-links.mobile-active a {
                 display: block;
-                padding: 12px 20px;
-                border-radius: 8px;
+                padding: 18px 20px;
+                border-radius: 12px;
                 background: rgba(0, 243, 255, 0.05);
+                margin-bottom: 10px;
+                font-size: 1.1rem;
+                border: 1px solid rgba(0, 243, 255, 0.1);
+            }
+            
+            .nav-links.mobile-active a:hover {
+                background: rgba(0, 243, 255, 0.15);
+                transform: translateX(5px);
             }
             
             /* Mobile Badge Optimizations: 調整位置避免重疊 */
@@ -2417,7 +2940,7 @@
     <div class="gallery-fullscreen" id="galleryFullscreen">
         <button class="gallery-close" id="galleryClose">
             <i class="fas fa-times"></i>
-        </button>
+    </button>
         <img id="fullscreenImage" src="" alt="Fullscreen">
     </div>
     
@@ -2508,19 +3031,24 @@
         </div>
     </div>
     
+    <!-- 手機版導航遮罩層 -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
     <nav class="navbar">
-        <div class="logo" data-zh="Ma Ying Yuen" data-en="Ma Ying Yuen">Ma Ying Yuen</div>
-        <ul class="nav-links">
-            <li><a href="#home" data-zh="首頁" data-en="Home">Home</a></li>
-            <li><a href="#about" data-zh="關於我" data-en="About">About</a></li>
-            <li><a href="#hobbies" data-zh="興趣" data-en="Interests">Interests</a></li>
-            <li><a href="#experience" data-zh="經歷" data-en="Experience">Experience</a></li>
-            <li><a href="#works" data-zh="作品" data-en="Works">Works</a></li>
-            <li><a href="#awards" data-zh="榮譽" data-en="Awards">Awards</a></li>
+        <div class="navbar-container">
+            <div class="logo" data-zh="Ma Ying Yuen" data-en="Ma Ying Yuen">Ma Ying Yuen</div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" data-zh="首頁" data-en="Home">Home</a></li>
+                <li><a href="#about" data-zh="關於我" data-en="About">About</a></li>
+                <li><a href="#hobbies" data-zh="興趣" data-en="Interests">Interests</a></li>
+                <li><a href="#experience" data-zh="經歷" data-en="Experience">Experience</a></li>
+                <li><a href="#works" data-zh="作品" data-en="Works">Works</a></li>
+                <li><a href="#awards" data-zh="榮譽" data-en="Awards">Awards</a></li>
                 </ul>
-        <div class="nav-controls">
-            <button class="lang-btn" id="langSwitch">繁</button>
-            <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+            <div class="nav-controls">
+                <button class="lang-btn" id="langSwitch">繁</button>
+                <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+            </div>
         </div>
     </nav>
 
@@ -2666,7 +3194,8 @@
                 </div>
         <div class="about-grid">
             <div class="info-card">
-                <h3 style="margin-bottom: 20px;" data-zh="個人簡介" data-en="Biography">Biography</h3>
+                <h2 class="about-hook" data-zh="連接數據與現實" data-en="Bridging Data & Reality">Bridging Data & Reality</h2>
+                <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人簡介" data-en="Biography">Biography</h3>
                 <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我是馬英源，現就讀於聖公會白約翰會督中學6D班。在過去幾年中，我從一名內斂的學生成長為積極主動的學生領袖。我熱衷於STEM領域，特別是空間數據科學、人工智能和工程技術的應用。在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。" data-en="I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.">
                     I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.
                 </p>
@@ -2686,6 +3215,43 @@
                     <p style="color:var(--slate);" data-zh="在這些項目中，我全程參與了從構思、設計、組裝到調試的每一個環節，協調團隊分工並整合技術資源。這些實踐經歷讓我深刻體會到理論與實踐相結合的重要性，也推動了學會形成「理論學習+實踐創新」的發展模式。正如校長評語中所提到的，我展現出的同理心、耐心和協作精神，贏得了老師和同學的信任，這些品質在團隊項目中得到了充分體現。" data-en="In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.">
                         In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.
                     </p>
+                    </div>
+                
+                <!-- CTA按鈕 -->
+                <div class="about-cta">
+                    <a href="#works" class="btn btn-primary" data-zh="查看作品" data-en="View My Journey">
+                        <span data-zh="查看作品" data-en="View My Journey">View My Journey</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline" id="downloadCV" data-zh="下載簡歷" data-en="Download CV">
+                        <i class="fas fa-download"></i>
+                        <span data-zh="下載簡歷" data-en="Download CV">Download CV</span>
+                    </a>
+                </div>
+                
+                <!-- 數據概覽 -->
+                <div class="about-stats">
+                    <div class="about-stat-item">
+                        <div class="about-stat-icon"><i class="fas fa-code"></i></div>
+                        <div class="about-stat-text">
+                            <div class="about-stat-number">3+</div>
+                            <div class="about-stat-label" data-zh="年編程經驗" data-en="Years Coding">Years Coding</div>
+            </div>
+                    </div>
+                    <div class="about-stat-item">
+                        <div class="about-stat-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="about-stat-text">
+                            <div class="about-stat-number">5+</div>
+                            <div class="about-stat-label" data-zh="獲獎次數" data-en="Awards Won">Awards Won</div>
+                    </div>
+                </div>
+                    <div class="about-stat-item">
+                        <div class="about-stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="about-stat-text">
+                            <div class="about-stat-number">10+</div>
+                            <div class="about-stat-label" data-zh="團隊項目" data-en="Team Projects">Team Projects</div>
+                    </div>
+                    </div>
                 </div>
 
                 <div class="recommendation-box">
@@ -2729,7 +3295,7 @@
                         <div>
                             <div style="font-weight:700;" data-zh="領導與服務" data-en="Leadership">Leadership</div>
                             <div style="font-size:0.8rem; color:var(--slate);">Vice-Head Prefect</div>
-                        </div>
+                    </div>
                     </div>
                     <div class="skill-ring" style="--pct: 0%;" data-val="98%"><span>0%</span></div>
                 </div>
@@ -2743,41 +3309,66 @@
             <h2 class="section-title" data-zh="探索不同領域" data-en="Exploring Fields">Exploring Fields</h2>
             </div>
         <div class="bento-grid">
+            <!-- 2x2 大格 - 工程與機械人 -->
             <div class="bento-item large">
-                <i class="fas fa-robot bento-icon" style="color: rgba(255,255,255,0.2);"></i>
+                <i class="fas fa-robot bento-icon"></i>
                 <div>
                     <h3 class="bento-title" data-zh="工程與機械人" data-en="Engineering">Engineering</h3>
                     <p class="bento-desc" data-zh="在加德士機械人工程師教室競賽中獲得亞軍(1st Runner-up)及季軍。熱衷於動手組裝與解決結構問題。" data-en="1st Runner-Up in Caltex Robot Competition. Passionate about building and structural problem solving.">
                         1st Runner-Up in Caltex Robot Competition. Passionate about building and structural problem solving.
-                </p>
+                    </p>
+                </div>
             </div>
-            </div>
-            <div class="bento-item">
+            
+            <!-- 1x1 小格 - AI應用 -->
+            <div class="bento-item small">
                 <i class="fas fa-laptop-code bento-icon"></i>
                 <div>
                     <h3 class="bento-title" data-zh="AI 應用" data-en="AI Application">AI Application</h3>
                     <p class="bento-desc" data-zh="在中大 AI Hackathon 獲優異獎。" data-en="Merit in AI Hackathon.">Merit in AI Hackathon.</p>
                 </div>
             </div>
-            <div class="bento-item">
+            
+            <!-- 1x1 小格 - 排球 -->
+            <div class="bento-item small">
                 <i class="fas fa-volleyball-ball bento-icon"></i>
                 <div>
                     <h3 class="bento-title" data-zh="排球" data-en="Volleyball">Volleyball</h3>
                     <p class="bento-desc" data-zh="屯門青年盃殿軍 (2024)。" data-en="4th in T.M. Youth Cup.">4th in T.M. Youth Cup.</p>
                 </div>
             </div>
-            <div class="bento-item">
+            
+            <!-- 1x1 小格 - 義工服務 -->
+            <div class="bento-item small">
                 <i class="fas fa-hands-helping bento-icon"></i>
                 <div>
                     <h3 class="bento-title" data-zh="義工服務" data-en="Volunteering">Volunteering</h3>
                     <p class="bento-desc" data-zh="參與大哥哥大姐姐計劃及數學輔導。" data-en="Big Brother/Sister Scheme.">Big Brother/Sister Scheme.</p>
                 </div>
             </div>
-            <div class="bento-item large" style="background: var(--dark);">
+            
+            <!-- 2x1 橫條 - 座右銘 -->
+            <div class="bento-item medium quote">
+                <p class="bento-desc" data-zh="「堅韌和紀律是成功的關鍵」" data-en="'Resilience and discipline are key to success'">
+                    "Resilience and discipline are key to success"
+                </p>
+            </div>
+            
+            <!-- 1x1 小格 - 地圖組件 -->
+            <div class="bento-item small map-widget">
+                <i class="fas fa-map-marker-alt bento-icon"></i>
+                <div>
+                    <h3 class="bento-title" data-zh="位置" data-en="Location">Location</h3>
+                    <p class="bento-desc" data-zh="基於香港" data-en="Based in Hong Kong">Based in Hong Kong</p>
+                </div>
+            </div>
+            
+            <!-- 2x2 大格 - Mi Teen學會 -->
+            <div class="bento-item large">
                 <i class="fas fa-lightbulb bento-icon"></i>
                 <div>
-                    <h3 class="bento-title" style="color:white;" data-zh="Mi Teen 學會" data-en="Mi Teen Society">Mi Teen Society</h3>
-                    <p class="bento-desc" style="color:#94a3b8;" data-zh="曾任主席，帶領團隊研發智能跑步機、投籃計分機等項目。" data-en="Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.">
+                    <h3 class="bento-title" data-zh="Mi Teen 學會" data-en="Mi Teen Society">Mi Teen Society</h3>
+                    <p class="bento-desc" data-zh="曾任主席，帶領團隊研發智能跑步機、投籃計分機等項目。" data-en="Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.">
                         Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.
                     </p>
                 </div>
@@ -2795,38 +3386,111 @@
                 <div class="exp-header">
                     <span class="exp-tag">2023 - 2025</span>
                     <h3 data-zh="副領袖生長" data-en="Vice-head Prefect">Vice-head Prefect</h3>
-                    <span style="font-size:0.9rem; color:var(--slate);" data-zh="聖公會白約翰會督中學" data-en="School Service">School Service</span>
+                    <span style="font-size:0.9rem; color:var(--slate); display: block; margin-top: 5px;" data-zh="聖公會白約翰會督中學" data-en="School Service">School Service</span>
                 </div>
                 <div class="exp-content">
                     <p data-zh="協助維持校園紀律，獲得「模範領袖生」獎項。展現出高度的可靠性、誠信和責任感，並贏得了師生的信任。" data-en="Assisted in maintaining discipline, winning Model Prefect awards. Demonstrated reliability, integrity, and responsibility, earning the trust of teachers and peers.">
                         Assisted in maintaining discipline, winning Model Prefect awards. Demonstrated reliability, integrity, and responsibility, earning the trust of teachers and peers.
                     </p>
+                    <div class="exp-achievements">
+                        <ul>
+                            <li data-zh="獲得「模範領袖生」獎項" data-en="Won 'Model Prefect' Award">Won 'Model Prefect' Award</li>
+                            <li data-zh="贏得師生信任" data-en="Earned trust of teachers and peers">Earned trust of teachers and peers</li>
+                            <li data-zh="展現高度可靠性和責任感" data-en="Demonstrated high reliability and responsibility">Demonstrated high reliability and responsibility</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="exp-card" style="border-left-color: #0ea5e9;">
+            <div class="exp-card">
                 <div class="exp-header">
-                    <span class="exp-tag" style="color:#0ea5e9; background:#e0f2fe;">2023 - 2024</span>
+                    <span class="exp-tag">2023 - 2024</span>
                     <h3 data-zh="Mi Teen 學會主席" data-en="Mi Teen Chairperson">Mi Teen Chairperson</h3>
-                    <span style="font-size:0.9rem; color:var(--slate);" data-zh="STEAM 推廣" data-en="STEAM Promotion">STEAM Promotion</span>
+                    <span style="font-size:0.9rem; color:var(--slate); display: block; margin-top: 5px;" data-zh="STEAM 推廣" data-en="STEAM Promotion">STEAM Promotion</span>
                 </div>
                 <div class="exp-content">
                     <p data-zh="統籌STEAM活動，帶領成員將理論付諸實踐，開發創新項目。推動了「動手做」的學習氛圍。" data-en="Coordinated STEAM activities and led members to put theory into practice by developing innovative projects. Promoted a 'hands-on' learning atmosphere.">
                         Coordinated STEAM activities and led members to put theory into practice by developing innovative projects. Promoted a 'hands-on' learning atmosphere.
                     </p>
+                    <div class="exp-achievements">
+                        <ul>
+                            <li data-zh="帶領團隊研發智能跑步機、投籃計分機等項目" data-en="Led team to develop Smart Treadmill and Basketball Scoring Machine">Led team to develop Smart Treadmill and Basketball Scoring Machine</li>
+                            <li data-zh="統籌策劃校內外STEAM講座和工作坊" data-en="Coordinated STEAM lectures and workshops">Coordinated STEAM lectures and workshops</li>
+                            <li data-zh="推動「理論學習+實踐創新」發展模式" data-en="Promoted 'theoretical learning + practical innovation' model">Promoted 'theoretical learning + practical innovation' model</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="exp-card" style="border-left-color: #10b981;">
+            
+            <div class="exp-card">
                 <div class="exp-header">
-                    <span class="exp-tag" style="color:#10b981; background:#d1fae5;">2024 - 2025</span>
+                    <span class="exp-tag">2024 - 2025</span>
                     <h3 data-zh="數學輔導員 & 學長" data-en="Mentor & Big Brother">Mentor & Big Brother</h3>
-                    <span style="font-size:0.9rem; color:var(--slate);" data-zh="朋輩支援" data-en="Peer Support">Peer Support</span>
+                    <span style="font-size:0.9rem; color:var(--slate); display: block; margin-top: 5px;" data-zh="朋輩支援" data-en="Peer Support">Peer Support</span>
                 </div>
                 <div class="exp-content">
                     <p data-zh="擔任數學學會導師及「大哥哥大姐姐」計劃成員，耐心指導低年級同學，協助他們解決學業困難並適應校園生活。" data-en="Served as a Mathematics Mentor and Big Brother scheme member, patiently guiding junior students in academics and school life adaptation.">
                         Served as a Mathematics Mentor and Big Brother scheme member, patiently guiding junior students in academics and school life adaptation.
                     </p>
+                    <div class="exp-achievements">
+                        <ul>
+                            <li data-zh="獲得「大哥哥大姐姐計劃」獎項" data-en="Won Big Brother/Sister Scheme Award">Won Big Brother/Sister Scheme Award</li>
+                            <li data-zh="耐心指導低年級同學" data-en="Patiently guided junior students">Patiently guided junior students</li>
+                            <li data-zh="協助解決學業困難並適應校園生活" data-en="Helped with academic difficulties and school adaptation">Helped with academic difficulties and school adaptation</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- 服務卡片區域 -->
+        <div class="services-section" style="margin-top: 80px;">
+            <div class="section-header">
+                <h3 class="section-title" style="font-size: 2rem; margin-bottom: 50px;" data-zh="我能提供的服務" data-en="Services I Offer">Services I Offer</h3>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-map-marked-alt service-icon"></i>
+                    <h3 class="service-title" data-zh="空間數據分析" data-en="Spatial Data Analysis">Spatial Data Analysis</h3>
+                    <p style="color: var(--text-light); line-height: 1.7;" data-zh="使用GIS和空間數據科學技術分析城市問題，提供數據驅動的解決方案。" data-en="Using GIS and Spatial Data Science to analyze urban problems and provide data-driven solutions.">
+                        Using GIS and Spatial Data Science to analyze urban problems and provide data-driven solutions.
+                    </p>
+                    <div class="service-tech">
+                        <span class="service-tech-item">QGIS</span>
+                        <span class="service-tech-item">Python</span>
+                        <span class="service-tech-item">GeoPandas</span>
+                        <span class="service-tech-item">ArcGIS</span>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-brain service-icon"></i>
+                    <h3 class="service-title" data-zh="AI/機器學習建模" data-en="AI/ML Modeling">AI/ML Modeling</h3>
+                    <p style="color: var(--text-light); line-height: 1.7;" data-zh="開發和優化機器學習模型，應用於實際問題解決。" data-en="Developing and optimizing machine learning models for real-world problem solving.">
+                        Developing and optimizing machine learning models for real-world problem solving.
+                    </p>
+                    <div class="service-tech">
+                        <span class="service-tech-item">TensorFlow</span>
+                        <span class="service-tech-item">Python</span>
+                        <span class="service-tech-item">Data Analysis</span>
+                        <span class="service-tech-item">Scikit-learn</span>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-code service-icon"></i>
+                    <h3 class="service-title" data-zh="Web開發" data-en="Web Development">Web Development</h3>
+                    <p style="color: var(--text-light); line-height: 1.7;" data-zh="創建響應式網站和Web應用程序，注重用戶體驗和現代設計。" data-en="Creating responsive websites and web applications with focus on UX and modern design.">
+                        Creating responsive websites and web applications with focus on UX and modern design.
+                    </p>
+                    <div class="service-tech">
+                        <span class="service-tech-item">HTML/CSS</span>
+                        <span class="service-tech-item">JavaScript</span>
+                        <span class="service-tech-item">React</span>
+                        <span class="service-tech-item">Node.js</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
     </section>
 
@@ -2834,7 +3498,7 @@
         <div class="section-header">
             <span class="section-subtitle" data-zh="比賽成就" data-en="Competition Achievements">Competition Achievements</span>
             <h2 class="section-title" data-zh="精選獲獎項目" data-en="Featured Projects">Featured Projects</h2>
-        </div>
+                </div>
         
         <!-- 項目篩選欄 -->
         <div class="work-filters" id="workFilters">
@@ -3222,18 +3886,18 @@
                 <h3 data-zh="社交媒體" data-en="Social Media">Social Media</h3>
                 <div class="footer-social">
                     <a href="https://www.instagram.com/yy.ma.walker/?utm_source=qr" target="_blank" class="social-link">
-                        <i class="fab fa-instagram"></i>
-                    </a>
+                <i class="fab fa-instagram"></i>
+            </a>
                     <a href="https://wa.me/85264399498" target="_blank" class="social-link">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
+                <i class="fab fa-whatsapp"></i>
+            </a>
                     <a href="tel:+85264399498" class="social-link" id="phoneLink" title="一鍵撥號">
-                        <i class="fas fa-phone"></i>
+                <i class="fas fa-phone"></i>
                     </a>
                     <a href="mailto:yingyuenma.alanhk@gmail.com" class="social-link" id="footerEmailLink" title="一鍵發郵件">
                         <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
+            </a>
+        </div>
             </div>
         </div>
         
@@ -3305,30 +3969,57 @@
             else nav.classList.remove('scrolled');
         });
 
-        // Mobile Menu
+        // Mobile Menu - 修復手機端導航
         const menuBtn = document.getElementById('menuToggle');
-        const navLinks = document.querySelector('.nav-links');
+        const navLinks = document.getElementById('navLinks');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         
-        menuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('mobile-active');
-            const icon = menuBtn.querySelector('i');
-            if (navLinks.classList.contains('mobile-active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+        if (menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('mobile-active');
+                if (mobileMenuOverlay) {
+                    mobileMenuOverlay.classList.toggle('active');
+                }
+                document.body.style.overflow = navLinks.classList.contains('mobile-active') ? 'hidden' : '';
+                
+                const icon = menuBtn.querySelector('i');
+                if (navLinks.classList.contains('mobile-active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // 點擊遮罩層關閉菜單
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.addEventListener('click', () => {
+                    navLinks.classList.remove('mobile-active');
+                    mobileMenuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    menuBtn.querySelector('i').classList.remove('fa-times');
+                    menuBtn.querySelector('i').classList.add('fa-bars');
+                });
             }
-        });
+        }
 
         // Close menu on link click
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('mobile-active');
-                menuBtn.querySelector('i').classList.remove('fa-times');
-                menuBtn.querySelector('i').classList.add('fa-bars');
+        if (navLinks) {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('mobile-active');
+                    if (mobileMenuOverlay) {
+                        mobileMenuOverlay.classList.remove('active');
+                    }
+                    document.body.style.overflow = '';
+                    if (menuBtn) {
+                        menuBtn.querySelector('i').classList.remove('fa-times');
+                        menuBtn.querySelector('i').classList.add('fa-bars');
+                    }
+                });
             });
-        });
+        }
 
         // Award Tabs Logic
         function switchTab(tabId) {
@@ -3362,16 +4053,50 @@
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
+                    if (entry.target.classList.contains('exp-card')) {
+                        entry.target.classList.add('visible');
+                    }
                 }
             });
-        });
+        }, { threshold: 0.1 });
         
-        document.querySelectorAll('.section-title, .bento-item, .work-card, .exp-card').forEach(el => {
+        document.querySelectorAll('.section-title, .bento-item, .work-card, .exp-card, .service-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'all 0.6s ease-out';
             observer.observe(el);
         });
+        
+        // 時間軸高亮動畫
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.borderColor = 'rgba(0, 243, 255, 0.6)';
+                    entry.target.style.boxShadow = 'var(--shadow-lg), 0 0 40px rgba(0, 243, 255, 0.4)';
+                } else {
+                    entry.target.style.borderColor = 'rgba(0, 243, 255, 0.3)';
+                    entry.target.style.boxShadow = 'var(--shadow-md)';
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        document.querySelectorAll('.exp-card').forEach(card => {
+            timelineObserver.observe(card);
+        });
+        
+        // 下載簡歷功能
+        const downloadCV = document.getElementById('downloadCV');
+        if (downloadCV) {
+            downloadCV.addEventListener('click', (e) => {
+                e.preventDefault();
+                // 替換為你的簡歷PDF路徑
+                const resumeUrl = 'resume.pdf';
+                const link = document.createElement('a');
+                link.href = resumeUrl;
+                link.download = 'Ma_Ying_Yuen_Resume.pdf';
+                link.click();
+            });
+        }
         
         // 加載動畫 - 蟲洞穿越轉場
         window.addEventListener('load', function() {
@@ -3894,7 +4619,7 @@
                             card.style.opacity = '1';
                             card.style.transform = 'scale(1)';
                         }, 10);
-                    } else {
+                } else {
                         card.style.opacity = '0';
                         card.style.transform = 'scale(0.8)';
                         setTimeout(() => {
@@ -3905,46 +4630,6 @@
             });
         });
         
-        // 閱讀進度指示器交互
-        const scrollProgress = document.getElementById('scrollProgress');
-        const tooltip = document.createElement('div');
-        tooltip.className = 'scroll-progress-tooltip';
-        document.body.appendChild(tooltip);
-        
-        const sections = [
-            { id: 'home', name: 'Home', nameZh: '首頁' },
-            { id: 'about', name: 'About', nameZh: '關於我' },
-            { id: 'hobbies', name: 'Interests', nameZh: '興趣' },
-            { id: 'experience', name: 'Experience', nameZh: '經歷' },
-            { id: 'works', name: 'Works', nameZh: '作品' },
-            { id: 'awards', name: 'Awards', nameZh: '榮譽' },
-            { id: 'contact', name: 'Contact', nameZh: '聯繫' }
-        ];
-        
-        scrollProgress.addEventListener('mousemove', (e) => {
-            const progress = (e.clientX / window.innerWidth) * 100;
-            const sectionIndex = Math.floor((progress / 100) * sections.length);
-            const section = sections[Math.min(sectionIndex, sections.length - 1)];
-            
-            tooltip.textContent = isEn ? section.name : section.nameZh;
-            tooltip.style.left = e.clientX + 'px';
-            tooltip.classList.add('visible');
-        });
-        
-        scrollProgress.addEventListener('mouseleave', () => {
-            tooltip.classList.remove('visible');
-        });
-        
-        scrollProgress.addEventListener('click', (e) => {
-            const progress = (e.clientX / window.innerWidth) * 100;
-            const sectionIndex = Math.floor((progress / 100) * sections.length);
-            const section = sections[Math.min(sectionIndex, sections.length - 1)];
-            
-            const targetSection = document.getElementById(section.id);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
         
         // 技能圓環動態加載
         const skillRings = document.querySelectorAll('.skill-ring');
@@ -3973,7 +4658,7 @@
                             valSpan.textContent = Math.floor(current) + '%';
                             ring.style.setProperty('--pct', Math.floor(current) + '%');
                             requestAnimationFrame(animate);
-                        } else {
+            } else {
                             valSpan.textContent = target + '%';
                             ring.style.setProperty('--pct', target + '%');
                         }
