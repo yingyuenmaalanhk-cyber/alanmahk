@@ -1317,7 +1317,7 @@
         <div class="hero-container">
             <div class="hero-text">
                 <span class="hero-tag" data-zh="你好，我是馬英源 👋" data-en="Hello, I'm Ma Ying Yuen 👋">Hello, I'm Ma Ying Yuen 👋</span>
-                <h1 data-zh="專注於工程與科技領域" data-en="Focus on the fields of engineering and technology">Focus on the fields of engineering and technology<br><span class="highlight" data-zh="工程創新的探索者" data-en="Engineering Innovation">Engineering Innovation</span></h1>
+                <h1 data-zh="專注於智慧城市與" data-en="Focused on Smart City &">Focused on Smart City &<br><span class="highlight" data-zh="工程創新的探索者" data-en="Engineering Innovation">Engineering Innovation</span></h1>
                 <p class="hero-desc" data-zh="致力於利用空間數據科學和AI技術解決現實問題。具備堅韌的成長思維與服務精神，目標成為一名造福社會的工程師。" data-en="Dedicated to using Spatial Data Science and AI to solve real-world problems. Possessing a growth mindset and a spirit of service, aiming to become an engineer who benefits society.">
                     Dedicated to using Spatial Data Science and AI to solve real-world problems. Possessing a growth mindset and a spirit of service, aiming to become an engineer who benefits society.
                 </p>
@@ -1331,14 +1331,8 @@
             </div>
             
             <div class="hero-img-box">
-                <!-- 
-                    使用 GitHub 圖片鏈接：
-                    1. 將頭像上傳到 GitHub 倉庫的 images 文件夾
-                    2. 獲取 Raw 鏈接：https://raw.githubusercontent.com/你的用戶名/倉庫名/分支名/images/profile.jpg
-                    3. 或者使用 GitHub Pages：https://你的用戶名.github.io/images/profile.jpg
-                    4. 替換下面的 src 屬性
-                -->
-                <img src="images/profile.jpg" alt="Profile" class="hero-img" 
+                <!-- 個人頭像 - 使用 GitHub 倉庫中的 selfie.jpg -->
+                <img src="selfie.jpg" alt="Profile" class="hero-img" 
                      onerror="this.src='https://via.placeholder.com/400?text=Profile+Image'; this.onerror=null;">
                 
                 <div class="hero-badge b1">
@@ -1611,7 +1605,7 @@
             </div>
             <div class="work-card">
                 <div class="work-img-wrapper">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.0nakbeSUThjFaSsSNZrHkgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" class="work-img" alt="Construction">
+                    <img src="https://www.hkic.edu.hk/upload/News/308/Image/20230811_SteamCompetition.jpg" class="work-img" alt="Construction">
                 </div>
                 <div class="work-body">
                     <div class="work-cat">Construction & Creativity</div>
@@ -2092,19 +2086,20 @@
         // 照片輪播功能
         const photos = [
             {
+                // 個人頭像 - 使用 GitHub 倉庫中的 selfie.jpg
+                src: 'selfie.jpg',
+                title: '個人頭像',
+                desc: 'Ma Ying Yuen'
+            },
+            {
                 src: 'https://www.polyu.edu.hk/fce/-/media/department/fce/content/smart-city-event/smart-city-banner-2025_v2.jpg?mh=450&mw=1920&rev=14fa06b4363d4d1eba8f03b8a2ee491f&hash=3A863DAF32CF51BB338CF22EC4E5F492',
                 title: '智慧城市項目',
                 desc: 'PolyU Build a Smart City Competition 2025 - 1st Runner-up'
             },
             {
                 src: 'https://cuhkjc-aiforfuture.hk/wp-content/uploads/2025/04/AI-Hackathon-Web-Banner.jpg',
-                title: 'AI Hackathon 2025',
+                title: 'AI Hackathon',
                 desc: 'CUHK AI Hackathon 2025 - Certificate of Merit'
-            },
-            {
-                src: 'https://tse2.mm.bing.net/th/id/OIP.0nakbeSUThjFaSsSNZrHkgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
-                title: '投射挑戰賽校園精英戰',
-                desc: 'Elite Champion Caltex Robot Competition'
             }
         ];
         
