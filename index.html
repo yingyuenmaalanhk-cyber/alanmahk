@@ -75,7 +75,7 @@
             position: relative;
         }
         
-        /* 動態粒子背景容器 */
+        /* 動態粒子背景容器 - 調整為背景裝飾，不遮擋內容 */
         .particles-container {
             position: fixed;
             top: 0;
@@ -83,16 +83,18 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: -1; /* 改為-1，確保在所有內容之後 */
             overflow: hidden;
+            opacity: 0.3; /* 降低不透明度，使其更為背景裝飾 */
         }
         
         .particle {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 243, 255, 0.3) 0%, rgba(157, 78, 221, 0.1) 100%);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(157, 78, 221, 0.05) 100%);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
             animation: float 20s infinite ease-in-out;
+            filter: blur(2px); /* 添加模糊效果，使其更柔和 */
         }
         
         @keyframes float {
@@ -211,17 +213,46 @@
             }
         }
         
-        /* 滾動進度條 */
+        /* 滾動進度條 - 可交互 */
         .scroll-progress {
             position: fixed;
             top: 0;
             left: 0;
             width: 0%;
-            height: 3px;
+            height: 4px;
             background: linear-gradient(135deg, #00F3FF 0%, #9D4EDD 100%);
             z-index: 1000;
             transition: width 0.1s ease;
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
+            cursor: pointer;
+        }
+        
+        .scroll-progress:hover {
+            height: 6px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 1);
+        }
+        
+        .scroll-progress-tooltip {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: var(--neon-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1001;
+        }
+        
+        .scroll-progress-tooltip.visible {
+            opacity: 1;
         }
 
         h1, h2, h3, h4 { 
@@ -774,12 +805,76 @@
         }
         
         .skill-list { display: flex; flex-direction: column; gap: 20px; }
-        .skill-item-new { background: white; padding: 15px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; }
+        .skill-item-new { 
+            background: rgba(10, 10, 26, 0.6); 
+            backdrop-filter: blur(10px);
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: var(--shadow-sm); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            transition: transform 0.2s; 
+        }
+        
         .skill-item-new:hover { transform: translateX(5px); }
         .skill-info { display: flex; align-items: center; gap: 15px; }
         .skill-icon { width: 40px; height: 40px; background: #eff6ff; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        .skill-ring { width: 50px; height: 50px; border-radius: 50%; background: conic-gradient(var(--primary) var(--pct), #e2e8f0 0deg); display: flex; align-items: center; justify-content: center; position: relative; }
-        .skill-ring::after { content: attr(data-val); position: absolute; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+        .skill-ring { 
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .skill-ring::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid rgba(0, 243, 255, 0.1);
+        }
+        
+        .skill-ring::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            border-top-color: var(--neon-blue);
+            border-right-color: var(--neon-blue);
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            transform: rotate(0deg);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), clip-path 0.3s;
+        }
+        
+        .skill-ring[data-animated="true"]::after {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+        .skill-ring span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            color: var(--neon-blue);
+            font-size: 0.9rem;
+            z-index: 1;
+            background: rgba(10, 10, 26, 0.8);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         /* --- 6. Bento Grid (Interests) --- */
         .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px); gap: 20px; }
@@ -848,6 +943,54 @@
         .exp-content p { color: var(--text-light); font-size: 0.95rem; }
 
         /* --- 8. Works (Cards) --- */
+        /* 項目篩選欄 */
+        .work-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .filter-btn {
+            padding: 10px 24px;
+            background: rgba(10, 10, 26, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            border-radius: 25px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--neon-blue), var(--electronic-purple));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+        
+        .work-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .work-card.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            height: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        
         .works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
         .work-card {
             background: rgba(10, 10, 26, 0.6); 
@@ -1358,6 +1501,103 @@
         }
         
         /* --- 10. Footer - 懸浮式圓形圖標陣列 --- */
+        /* 聯繫表單區域 */
+        .contact-section {
+            background: rgba(10, 10, 26, 0.3);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .contact-item i {
+            font-size: 2rem;
+            color: var(--neon-blue);
+            margin-top: 5px;
+        }
+        
+        .contact-item h3 {
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .contact-item p {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .copy-btn {
+            padding: 8px 16px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            color: var(--neon-blue);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            color: var(--neon-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 16px;
+            background: rgba(10, 10, 26, 0.6);
+            border: 2px solid rgba(0, 243, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+        
         .footer { 
             background: linear-gradient(135deg, #0A0A1A 0%, #1A0A2A 100%); 
             color: var(--text-light); 
@@ -1375,12 +1615,92 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.1) 0%, transparent 50%);
         }
         
         .footer > * {
             position: relative;
             z-index: 1;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p {
+            color: var(--slate);
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        .footer-quote {
+            font-style: italic;
+            color: var(--neon-blue) !important;
+            border-left: 3px solid var(--neon-blue);
+            padding-left: 15px;
+            margin-top: 20px !important;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--neon-blue);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .motion-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .motion-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .motion-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
         }
         
         .footer-social { 
@@ -1872,6 +2192,13 @@
         }
 
         /* --- 11. Responsive --- */
+        /* 桌面端隱藏標籤雲 */
+        @media (min-width: 901px) {
+            .hero-badge-cloud {
+                display: none;
+            }
+        }
+        
         @media (max-width: 900px) {
             .hero-container { 
                 grid-template-columns: 1fr; 
@@ -1903,6 +2230,32 @@
                 grid-column: span 1; 
             }
             
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .work-filters {
+                gap: 10px;
+            }
+            
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+            
             .navbar { width: 95%; top: auto; bottom: 20px; padding: 12px 20px; }
             .navbar.scrolled { bottom: 20px; }
             .nav-links { display: none; }
@@ -1911,17 +2264,33 @@
             .nav-links.mobile-active { 
                 display: flex; 
                 flex-direction: column; 
-                position: absolute; 
-                bottom: 70px; 
-                left: 0; 
-                width: 100%; 
-                background: rgba(10, 10, 26, 0.95); 
+                position: fixed; 
+                bottom: 80px; 
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 40px);
+                max-width: 400px;
+                max-height: 70vh;
+                overflow-y: auto;
+                background: rgba(10, 10, 26, 0.98); 
                 backdrop-filter: blur(20px);
-            padding: 20px;
+                padding: 20px;
                 border-radius: 20px; 
                 box-shadow: 0 -10px 30px rgba(0, 243, 255, 0.2); 
                 text-align: center; 
                 border: 1px solid rgba(0, 243, 255, 0.3);
+                z-index: 1000;
+            }
+            
+            .nav-links.mobile-active li {
+                margin: 10px 0;
+            }
+            
+            .nav-links.mobile-active a {
+                display: block;
+                padding: 12px 20px;
+                border-radius: 8px;
+                background: rgba(0, 243, 255, 0.05);
             }
             
             /* Mobile Badge Optimizations: 調整位置避免重疊 */
@@ -1970,13 +2339,6 @@
                 transform: none;
                 animation: none;
                 display: inline-flex !important;
-            }
-            
-            /* 桌面端隱藏標籤雲 */
-            @media (min-width: 901px) {
-                .hero-badge-cloud {
-                    display: none;
-                }
             }
 
             .award-row { flex-direction: column; align-items: flex-start; gap: 5px; }
@@ -2356,7 +2718,7 @@
                             <div style="font-size:0.8rem; color:var(--slate);">GIS, Urban Informatics</div>
                     </div>
                     </div>
-                    <div class="skill-ring" style="--pct: 92%;" data-val="92%"></div>
+                    <div class="skill-ring" style="--pct: 0%;" data-val="92%"><span>0%</span></div>
                 </div>
                 <div class="skill-item-new">
                     <div class="skill-info">
@@ -2366,7 +2728,7 @@
                             <div style="font-size:0.8rem; color:var(--slate);">TensorFlow, Data Analysis</div>
                     </div>
                     </div>
-                    <div class="skill-ring" style="--pct: 90%;" data-val="90%"></div>
+                    <div class="skill-ring" style="--pct: 0%;" data-val="90%"><span>0%</span></div>
                 </div>
                 <div class="skill-item-new">
                     <div class="skill-info">
@@ -2376,7 +2738,7 @@
                             <div style="font-size:0.8rem; color:var(--slate);">Vice-Head Prefect</div>
                         </div>
                     </div>
-                    <div class="skill-ring" style="--pct: 98%;" data-val="98%"></div>
+                    <div class="skill-ring" style="--pct: 0%;" data-val="98%"><span>0%</span></div>
                 </div>
             </div>
         </div>
@@ -2480,8 +2842,18 @@
             <span class="section-subtitle" data-zh="比賽成就" data-en="Competition Achievements">Competition Achievements</span>
             <h2 class="section-title" data-zh="精選獲獎項目" data-en="Featured Projects">Featured Projects</h2>
         </div>
-        <div class="works-grid">
-            <div class="work-card">
+        
+        <!-- 項目篩選欄 -->
+        <div class="work-filters" id="workFilters">
+            <button class="filter-btn active" data-filter="all" data-zh="全部" data-en="All">All</button>
+            <button class="filter-btn" data-filter="smart-city" data-zh="智慧城市" data-en="Smart City">Smart City</button>
+            <button class="filter-btn" data-filter="ai" data-zh="AI/機器學習" data-en="AI/ML">AI/ML</button>
+            <button class="filter-btn" data-filter="web" data-zh="Web開發" data-en="Web Dev">Web Dev</button>
+            <button class="filter-btn" data-filter="robotics" data-zh="機械人" data-en="Robotics">Robotics</button>
+        </div>
+        
+        <div class="works-grid" id="worksGrid">
+            <div class="work-card" data-category="smart-city">
                 <div class="work-img-wrapper">
                     <img src="https://www.polyu.edu.hk/fce/-/media/department/fce/content/smart-city-event/smart-city-banner-2025_v2.jpg?mh=450&mw=1920" class="work-img" alt="Smart City" loading="lazy">
                 </div>
@@ -2494,7 +2866,7 @@
                     <a href="#" class="read-more" data-work="0"><span data-zh="查看詳情" data-en="Details">Details</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-            <div class="work-card">
+            <div class="work-card" data-category="ai">
                 <div class="work-img-wrapper">
                     <img src="https://cuhkjc-aiforfuture.hk/wp-content/uploads/2025/04/AI-Hackathon-Web-Banner.jpg" class="work-img" alt="AI Hackathon" loading="lazy">
                 </div>
@@ -2504,10 +2876,10 @@
                     <p class="work-text" data-zh="在中大賽馬會「智」為未來 AI Hackathon 2025 中獲得優異獎 (Certificate of Merit)。運用編程與AI思維解決複雜問題。" data-en="Certificate of Merit in CUHK AI Hackathon 2025. Applied programming and AI thinking to solve complex problems.">
                         Certificate of Merit in CUHK AI Hackathon 2025. Applied programming and AI thinking to solve complex problems.
                     </p>
-                    <a href="#" class="read-more" data-work="0"><span data-zh="查看詳情" data-en="Details">Details</span> <i class="fas fa-arrow-right"></i></a>
+                    <a href="#" class="read-more" data-work="1"><span data-zh="查看詳情" data-en="Details">Details</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-            <div class="work-card">
+            <div class="work-card" data-category="robotics">
                 <div class="work-img-wrapper">
                     <img src="https://www.hkic.edu.hk/upload/News/308/Image/20230811_SteamCompetition.jpg" class="work-img" alt="Construction" loading="lazy">
                 </div>
@@ -2517,7 +2889,7 @@
                     <p class="work-text" data-zh="在香港建造學院舉辦的 2024-2025 STEAM 夏令營創意組裝比賽中獲得季軍 (2nd Runner-up)。展現結構工程創意。" data-en="2nd Runner-Up in HKIC STEAM Summer Camp Creative Assembly Competition. Showcased structural engineering creativity.">
                         2nd Runner-Up in HKIC STEAM Summer Camp Creative Assembly Competition. Showcased structural engineering creativity.
                     </p>
-                    <a href="#" class="read-more" data-work="0"><span data-zh="查看詳情" data-en="Details">Details</span> <i class="fas fa-arrow-right"></i></a>
+                    <a href="#" class="read-more" data-work="2"><span data-zh="查看詳情" data-en="Details">Details</span> <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -2832,30 +3204,137 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <h2 style="margin-bottom:30px;" data-zh="保持聯繫" data-en="Get in Touch">Get in Touch</h2>
-        <div class="footer-social">
-            <a href="https://www.instagram.com/yy.ma.walker/?utm_source=qr" target="_blank" class="social-link">
-                <i class="fab fa-instagram"></i>
-                <span class="platform-name" data-zh="Instagram" data-en="Instagram">Instagram</span>
-            </a>
-            <a href="https://wa.me/85264399498" target="_blank" class="social-link">
-                <i class="fab fa-whatsapp"></i>
-                <span class="platform-name" data-zh="WhatsApp" data-en="WhatsApp">WhatsApp</span>
-            </a>
-            <a href="tel:+85264399498" class="social-link">
-                <i class="fas fa-phone"></i>
-                <span class="platform-name" data-zh="電話" data-en="Phone">Phone</span>
-            </a>
-            <a href="mailto:contact@example.com" class="social-link">
-                <i class="fas fa-envelope"></i>
-                <span class="platform-name" data-zh="郵箱" data-en="Email">Email</span>
-            </a>
+    <!-- 聯繫表單區域 -->
+    <section id="contact" class="section contact-section">
+        <div class="section-header">
+            <span class="section-subtitle" data-zh="聯繫我" data-en="Contact Me">Contact Me</span>
+            <h2 class="section-title" data-zh="讓我們開始對話" data-en="Let's Start a Conversation">Let's Start a Conversation</h2>
         </div>
-        <div class="copyright" data-zh="© 2025 馬英源的個人主頁 | 保留所有權利" data-en="© 2025 Ma Ying Yuen. All Rights Reserved.">
-            © 2025 Ma Ying Yuen. All Rights Reserved.
+        
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h3 data-zh="郵箱" data-en="Email">Email</h3>
+                        <p class="contact-email" id="contactEmail" data-email="contact@example.com">contact@example.com</p>
+                        <button class="copy-btn" id="copyEmailBtn" data-zh="點擊複製" data-en="Click to Copy">Click to Copy</button>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h3 data-zh="電話" data-en="Phone">Phone</h3>
+                        <p>+852 6439 9498</p>
+                    </div>
+                </div>
+            </div>
+            
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="contactName" data-zh="姓名" data-en="Name">Name</label>
+                    <input type="text" id="contactName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmailInput" data-zh="郵箱" data-en="Email">Email</label>
+                    <input type="email" id="contactEmailInput" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage" data-zh="消息" data-en="Message">Message</label>
+                    <textarea id="contactMessage" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" data-zh="發送消息" data-en="Send Message">Send Message</button>
+            </form>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 data-zh="關於" data-en="About">About</h3>
+                <p data-zh="致力於利用空間數據科學和AI技術解決現實問題的STEM學生。" data-en="STEM student dedicated to using Spatial Data Science and AI to solve real-world problems.">
+                    STEM student dedicated to using Spatial Data Science and AI to solve real-world problems.
+                </p>
+                <p class="footer-quote" data-zh="「堅韌和紀律是成功的關鍵」" data-en="'Resilience and discipline are key to success'">
+                    "Resilience and discipline are key to success"
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3 data-zh="快速鏈接" data-en="Quick Links">Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#home" data-zh="首頁" data-en="Home">Home</a></li>
+                    <li><a href="#about" data-zh="關於我" data-en="About">About</a></li>
+                    <li><a href="#works" data-zh="作品" data-en="Works">Works</a></li>
+                    <li><a href="#contact" data-zh="聯繫" data-en="Contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 data-zh="社交媒體" data-en="Social Media">Social Media</h3>
+                <div class="footer-social">
+                    <a href="https://www.instagram.com/yy.ma.walker/?utm_source=qr" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/85264399498" target="_blank" class="social-link">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="tel:+85264399498" class="social-link">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                    <a href="mailto:contact@example.com" class="social-link" id="footerEmailLink">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="copyright" data-zh="© 2025 馬英源的個人主頁 | 保留所有權利" data-en="© 2025 Ma Ying Yuen. All Rights Reserved.">
+                © 2025 Ma Ying Yuen. All Rights Reserved.
+            </div>
+            <div class="motion-toggle">
+                <label>
+                    <input type="checkbox" id="reduceMotionToggle">
+                    <span data-zh="減弱動畫" data-en="Reduce Motion">Reduce Motion</span>
+                </label>
+            </div>
         </div>
     </footer>
+    
+    <!-- SEO JSON-LD 結構化數據 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Ma Ying Yuen",
+        "alternateName": "馬英源",
+        "jobTitle": "STEM Student",
+        "description": "STEM Student passionate about Smart City, Spatial Data Science, and AI. Winner of PolyU Smart City Competition 2025 (1st Runner-up) and multiple awards.",
+        "url": "https://your-username.github.io/",
+        "image": "https://your-username.github.io/selfie.jpg",
+        "sameAs": [
+            "https://www.instagram.com/yy.ma.walker/",
+            "https://wa.me/85264399498"
+        ],
+        "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "S.K.H. Bishop Baker Secondary School"
+        },
+        "award": [
+            "1st Runner-up - PolyU Build a Smart City Competition 2025",
+            "Certificate of Merit - CUHK AI Hackathon 2025",
+            "Elite Champion - Caltex Robot Competition 2023"
+        ],
+        "knowsAbout": [
+            "Spatial Data Science",
+            "Artificial Intelligence",
+            "Python Programming",
+            "GIS",
+            "Smart City"
+        ]
+    }
+    </script>
 
     <script>
         // Language Switch
@@ -3254,7 +3733,7 @@
         function createParticles() {
             const container = document.getElementById('particlesContainer');
             if (!container) return;
-            const particleCount = 50;
+            const particleCount = 30; /* 減少粒子數量，降低視覺干擾 */
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -3284,10 +3763,12 @@
         // 照片輪播功能
         const photos = [
             {
-                // 個人頭像 - 使用 GitHub 倉庫中的 selfie.jpg
-                src: 'selfie.jpg',
-                title: '個人頭像',
-                desc: 'Ma Ying Yuen'
+                // Smart Attendance System - 使用 GitHub 倉庫中的圖片
+                src: 'Smart Attendance System.jpg',
+                title: 'Smart Attendance System',
+                titleZh: '智能考勤系統',
+                desc: 'An intelligent attendance tracking system using AI and computer vision',
+                descZh: '使用AI和計算機視覺的智能考勤追蹤系統'
             },
             {
                 src: 'https://www.polyu.edu.hk/fce/-/media/department/fce/content/smart-city-event/smart-city-banner-2025_v2.jpg?mh=450&mw=1920&rev=14fa06b4363d4d1eba8f03b8a2ee491f&hash=3A863DAF32CF51BB338CF22EC4E5F492',
@@ -3321,12 +3802,13 @@
                 else if (index === 1) photoItem.classList.add('next');
                 else photoItem.classList.add('prev');
                 
+                const isZh = !isEn;
                 photoItem.innerHTML = `
                     <div class="photo-frame">
-                        <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                        <img src="${photo.src}" alt="${isZh ? (photo.titleZh || photo.title) : photo.title}" loading="lazy">
                         <div class="photo-info">
-                            <h3>${photo.title}</h3>
-                            <p>${photo.desc}</p>
+                            <h3>${isZh ? (photo.titleZh || photo.title) : photo.title}</h3>
+                            <p>${isZh ? (photo.descZh || photo.desc) : photo.desc}</p>
                         </div>
                     </div>
                 `;
@@ -3438,6 +3920,232 @@
         // 滾動事件監聽
         window.addEventListener('scroll', function() {
             updateScrollProgress();
+        });
+        
+        // 項目篩選功能
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const workCards = document.querySelectorAll('.work-card');
+        
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // 更新按鈕狀態
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 篩選項目
+                workCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            card.classList.add('hidden');
+                        }, 400);
+                    }
+                });
+            });
+        });
+        
+        // 閱讀進度指示器交互
+        const scrollProgress = document.getElementById('scrollProgress');
+        const tooltip = document.createElement('div');
+        tooltip.className = 'scroll-progress-tooltip';
+        document.body.appendChild(tooltip);
+        
+        const sections = [
+            { id: 'home', name: 'Home', nameZh: '首頁' },
+            { id: 'about', name: 'About', nameZh: '關於我' },
+            { id: 'hobbies', name: 'Interests', nameZh: '興趣' },
+            { id: 'experience', name: 'Experience', nameZh: '經歷' },
+            { id: 'works', name: 'Works', nameZh: '作品' },
+            { id: 'awards', name: 'Awards', nameZh: '榮譽' },
+            { id: 'contact', name: 'Contact', nameZh: '聯繫' }
+        ];
+        
+        scrollProgress.addEventListener('mousemove', (e) => {
+            const progress = (e.clientX / window.innerWidth) * 100;
+            const sectionIndex = Math.floor((progress / 100) * sections.length);
+            const section = sections[Math.min(sectionIndex, sections.length - 1)];
+            
+            tooltip.textContent = isEn ? section.name : section.nameZh;
+            tooltip.style.left = e.clientX + 'px';
+            tooltip.classList.add('visible');
+        });
+        
+        scrollProgress.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('visible');
+        });
+        
+        scrollProgress.addEventListener('click', (e) => {
+            const progress = (e.clientX / window.innerWidth) * 100;
+            const sectionIndex = Math.floor((progress / 100) * sections.length);
+            const section = sections[Math.min(sectionIndex, sections.length - 1)];
+            
+            const targetSection = document.getElementById(section.id);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        
+        // 技能圓環動態加載
+        const skillRings = document.querySelectorAll('.skill-ring');
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.hasAttribute('data-animated')) {
+                    const ring = entry.target;
+                    const pct = ring.getAttribute('data-val').replace('%', '');
+                    ring.style.setProperty('--pct', pct + '%');
+                    ring.setAttribute('data-animated', 'true');
+                    
+                    // 添加數值動畫
+                    const valSpan = ring.querySelector('span') || document.createElement('span');
+                    if (!ring.querySelector('span')) {
+                        ring.appendChild(valSpan);
+                    }
+                    
+                    let current = 0;
+                    const target = parseInt(pct);
+                    const duration = 1500;
+                    const increment = target / (duration / 16);
+                    
+                    const animate = () => {
+                        current += increment;
+                        if (current < target) {
+                            valSpan.textContent = Math.floor(current) + '%';
+                            ring.style.setProperty('--pct', Math.floor(current) + '%');
+                            requestAnimationFrame(animate);
+                        } else {
+                            valSpan.textContent = target + '%';
+                            ring.style.setProperty('--pct', target + '%');
+                        }
+                    };
+                    animate();
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        skillRings.forEach(ring => {
+            skillObserver.observe(ring);
+        });
+        
+        // 減弱動畫開關
+        const reduceMotionToggle = document.getElementById('reduceMotionToggle');
+        if (reduceMotionToggle) {
+            reduceMotionToggle.addEventListener('change', (e) => {
+                const reduceMotion = e.target.checked;
+                document.documentElement.style.setProperty('--animation-duration', reduceMotion ? '0s' : '');
+                
+                if (reduceMotion) {
+                    // 停止粒子動畫
+                    const particles = document.querySelectorAll('.particle');
+                    particles.forEach(p => {
+                        p.style.animation = 'none';
+                        p.style.opacity = '0.1';
+                    });
+                    
+                    // 停止徽章動畫
+                    const badges = document.querySelectorAll('.hero-badge');
+                    badges.forEach(b => {
+                        b.style.animation = 'none';
+                    });
+                } else {
+                    // 恢復動畫
+                    const particles = document.querySelectorAll('.particle');
+                    particles.forEach(p => {
+                        p.style.animation = '';
+                        p.style.opacity = '';
+                    });
+                    
+                    const badges = document.querySelectorAll('.hero-badge');
+                    badges.forEach(b => {
+                        b.style.animation = '';
+                    });
+                }
+            });
+        }
+        
+        // 一鍵複製郵箱
+        const copyEmailBtn = document.getElementById('copyEmailBtn');
+        const contactEmail = document.getElementById('contactEmail');
+        
+        if (copyEmailBtn && contactEmail) {
+            copyEmailBtn.addEventListener('click', () => {
+                const email = contactEmail.getAttribute('data-email');
+                navigator.clipboard.writeText(email).then(() => {
+                    const originalText = copyEmailBtn.textContent;
+                    copyEmailBtn.textContent = isEn ? 'Copied!' : '已複製!';
+                    copyEmailBtn.style.background = 'rgba(16, 185, 129, 0.2)';
+                    copyEmailBtn.style.borderColor = '#10b981';
+                    
+                    setTimeout(() => {
+                        copyEmailBtn.textContent = originalText;
+                        copyEmailBtn.style.background = '';
+                        copyEmailBtn.style.borderColor = '';
+                    }, 2000);
+                });
+            });
+        }
+        
+        // 聯繫表單提交
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(contactForm);
+                const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    message: formData.get('message')
+                };
+                
+                // 這裡可以使用 Formspree 或 EmailJS
+                // 示例使用 Formspree (需要替換為你的表單ID)
+                try {
+                    const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (response.ok) {
+                        showNotification(isEn ? 'Message sent successfully!' : '消息發送成功!');
+                        contactForm.reset();
+                    } else {
+                        throw new Error('Send failed');
+                    }
+                } catch (error) {
+                    showNotification(isEn ? 'Failed to send message. Please try again.' : '發送失敗，請重試。');
+                }
+            });
+        }
+        
+        // 移動端Hero區域優化 - 徽章改為橫向排列
+        if (window.innerWidth <= 900) {
+            const heroBadges = document.querySelectorAll('.hero-badge.b1, .hero-badge.b2, .hero-badge.b3, .hero-badge.b4, .hero-badge.b5, .hero-badge.b6, .hero-badge.b7');
+            heroBadges.forEach(badge => {
+                badge.style.animation = 'none';
+            });
+        }
+        
+        // 響應式調整
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 900) {
+                const heroBadges = document.querySelectorAll('.hero-badge.b1, .hero-badge.b2, .hero-badge.b3, .hero-badge.b4, .hero-badge.b5, .hero-badge.b6, .hero-badge.b7');
+                heroBadges.forEach(badge => {
+                    badge.style.animation = 'none';
+                });
+            }
         });
         
         // 初始化
