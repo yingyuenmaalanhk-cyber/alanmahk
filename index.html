@@ -829,6 +829,65 @@
             overflow: hidden;
         }
         
+        /* 折叠展开功能 */
+        .about-content-collapsible {
+            max-height: 300px;
+            overflow: hidden;
+            position: relative;
+            transition: max-height 0.5s ease-out;
+        }
+        
+        .about-content-collapsible.expanded {
+            max-height: 5000px;
+        }
+        
+        .about-content-collapsible::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, rgba(10, 10, 26, 0.95));
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        
+        .about-content-collapsible.expanded::after {
+            opacity: 0;
+        }
+        
+        .about-expand-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 8px;
+            color: var(--neon-blue);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .about-expand-btn:hover {
+            background: rgba(0, 243, 255, 0.2);
+            border-color: rgba(0, 243, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .about-expand-btn i {
+            transition: transform 0.3s;
+        }
+        
+        .about-expand-btn.expanded i {
+            transform: rotate(180deg);
+        }
+        
         .info-card::before {
             content: '';
             position: absolute;
@@ -934,19 +993,48 @@
         
         .skill-list { display: flex; flex-direction: column; gap: 20px; }
         .skill-item-new { 
-            background: rgba(10, 10, 26, 0.6); 
-            backdrop-filter: blur(10px);
-            padding: 15px 20px; 
-            border-radius: 12px; 
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            box-shadow: var(--shadow-sm); 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px 25px; 
+            border-radius: 16px; 
+            border: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                        0 0 1px rgba(0, 243, 255, 0.1) inset,
+                        0 0 20px rgba(0, 243, 255, 0.05);
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            transition: transform 0.2s; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .skill-item-new:hover { transform: translateX(5px); }
+        .skill-item-new::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(0, 243, 255, 0.05) 0%, 
+                rgba(157, 78, 221, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        
+        .skill-item-new:hover { 
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                        0 0 2px rgba(0, 243, 255, 0.2) inset,
+                        0 0 30px rgba(0, 243, 255, 0.1);
+        }
+        
+        .skill-item-new:hover::before {
+            opacity: 1;
+        }
         .skill-info { display: flex; align-items: center; gap: 15px; }
         .skill-icon { width: 40px; height: 40px; background: #eff6ff; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
         .skill-ring { 
@@ -1010,6 +1098,29 @@
             grid-template-columns: repeat(4, 1fr); 
             grid-template-rows: repeat(2, 200px); 
             gap: 20px; 
+        }
+        
+        /* 手機端響應式修復 */
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr !important;
+                grid-template-rows: auto !important;
+                gap: 15px;
+            }
+            
+            .bento-item {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+            }
+            
+            .bento-item.large,
+            .bento-item.medium {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+            }
         }
         
         .bento-item { 
@@ -2525,22 +2636,6 @@
         }
         
         @media (max-width: 768px) {
-            .fab-container {
-                bottom: 20px;
-                right: 20px;
-            }
-            
-            .fab-main {
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-        }
-        
-            .fab-item {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
             
             .terminal-window {
                 max-width: 100%;
@@ -2956,31 +3051,6 @@
         </div>
     </div>
     
-    <!-- 智能懸浮導航球 (FAB) -->
-    <div class="fab-container" id="fabContainer">
-        <button class="fab-main" id="fabMain">
-            <i class="fas fa-plus"></i>
-        </button>
-        <div class="fab-menu" id="fabMenu">
-            <button class="fab-item" id="fabEmail" title="複製 Email">
-                <i class="fas fa-envelope"></i>
-                <span class="fab-label">Email</span>
-            </button>
-            <button class="fab-item" id="fabWhatsApp" title="打開 WhatsApp">
-                <i class="fab fa-whatsapp"></i>
-                <span class="fab-label">WhatsApp</span>
-            </button>
-            <button class="fab-item" id="fabResume" title="下載簡歷">
-                <i class="fas fa-file-pdf"></i>
-                <span class="fab-label">Resume</span>
-            </button>
-            <button class="fab-item" id="fabContact" title="聯絡表單">
-                <i class="fas fa-comment"></i>
-                <span class="fab-label">Contact</span>
-            </button>
-        </div>
-    </div>
-    
     <!-- 終端機風格聯絡表單 -->
     <div class="terminal-modal" id="terminalModal">
         <div class="terminal-backdrop" id="terminalBackdrop"></div>
@@ -3196,26 +3266,36 @@
             <div class="info-card">
                 <h2 class="about-hook" data-zh="連接數據與現實" data-en="Bridging Data & Reality">Bridging Data & Reality</h2>
                 <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人簡介" data-en="Biography">Biography</h3>
-                <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我是馬英源，現就讀於聖公會白約翰會督中學6D班。在過去幾年中，我從一名內斂的學生成長為積極主動的學生領袖。我熱衷於STEM領域，特別是空間數據科學、人工智能和工程技術的應用。在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。" data-en="I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.">
-                    I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.
-                </p>
-                <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我性格堅韌、細心嚴謹且樂於助人，喜歡在團隊中協作完成任務，並樂於挑戰新事物，不斷突破自己的舒適區。在校內擔任副總學長等多項領導職務，培養了良好的組織和溝通能力。我相信堅韌和紀律是成功的關鍵，並始終保持成長思維，將每一次挑戰視為進步的機會。未來，我希望能在工程方向繼續深造，成為一名對社會有貢獻的工程師。" data-en="I am resilient, meticulous, and helpful, enjoy collaborating in teams to complete tasks, and am always willing to challenge myself and step out of my comfort zone. I have served in multiple leadership roles including Vice-head Prefect, which has developed my organizational and communication skills. I believe resilience and discipline are key to success, and I always maintain a growth mindset, viewing every challenge as an opportunity to improve. In the future, I hope to further my studies in engineering and become an engineer who contributes to society.">
-                    I am resilient, meticulous, and helpful, enjoy collaborating in teams to complete tasks, and am always willing to challenge myself and step out of my comfort zone. I have served in multiple leadership roles including Vice-head Prefect, which has developed my organizational and communication skills. I believe resilience and discipline are key to success, and I always maintain a growth mindset, viewing every challenge as an opportunity to improve. In the future, I hope to further my studies in engineering and become an engineer who contributes to society.
-                </p>
                 
-                <!-- 個人成長經歷板塊 -->
-                <div class="growth-experience" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(0, 243, 255, 0.2);">
-                    <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人成長經歷" data-en="Personal Growth Journey">Personal Growth Journey</h3>
-                    <p style="color:var(--slate); margin-bottom: 15px;" data-zh="作為一名香港中學生，我對工程與科技充滿嚮往與熱忱。這種熱情驅使我在MiTeen科技工程學會中找到了實踐的平台，並在學會中擔任重要角色。" data-en="As a Hong Kong secondary school student, I am deeply passionate about engineering and technology. This passion led me to find a platform for practice in the MiTeen Technology and Engineering Society, where I have taken on important roles.">
-                        As a Hong Kong secondary school student, I am deeply passionate about engineering and technology. This passion led me to find a platform for practice in the MiTeen Technology and Engineering Society, where I have taken on important roles.
+                <!-- 折叠展开内容区域 -->
+                <div class="about-content-collapsible" id="aboutContentCollapsible">
+                    <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我是馬英源，現就讀於聖公會白約翰會督中學6D班。在過去幾年中，我從一名內斂的學生成長為積極主動的學生領袖。我熱衷於STEM領域，特別是空間數據科學、人工智能和工程技術的應用。在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。" data-en="I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.">
+                        I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.
                     </p>
-                    <p style="color:var(--slate); margin-bottom: 15px;" data-zh="在MiTeen學會期間，我負責統籌策劃校內外STEAM講座、工作坊和科技競賽，這些經歷不僅提升了我的組織能力，也讓我更深入地了解科技教育的價值。更重要的是，我帶領團隊研發並落地了多個創新項目，包括智能跑步機（結合傳感器技術與數據分析）、自動抓娃娃機（機械結構設計與編程控制）、投籃計分機（電子電路設計與算法優化）等。" data-en="During my time in the MiTeen Society, I was responsible for coordinating and organizing STEAM lectures, workshops, and technology competitions both within and outside the school. These experiences not only enhanced my organizational skills but also deepened my understanding of the value of technology education. More importantly, I led teams to develop and implement multiple innovative projects, including a Smart Treadmill (combining sensor technology and data analysis), an Automatic Claw Machine (mechanical structure design and programming control), and a Basketball Scoring Machine (electronic circuit design and algorithm optimization).">
-                        During my time in the MiTeen Society, I was responsible for coordinating and organizing STEAM lectures, workshops, and technology competitions both within and outside the school. These experiences not only enhanced my organizational skills but also deepened my understanding of the value of technology education. More importantly, I led teams to develop and implement multiple innovative projects, including a Smart Treadmill (combining sensor technology and data analysis), an Automatic Claw Machine (mechanical structure design and programming control), and a Basketball Scoring Machine (electronic circuit design and algorithm optimization).
+                    <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我性格堅韌、細心嚴謹且樂於助人，喜歡在團隊中協作完成任務，並樂於挑戰新事物，不斷突破自己的舒適區。在校內擔任副總學長等多項領導職務，培養了良好的組織和溝通能力。我相信堅韌和紀律是成功的關鍵，並始終保持成長思維，將每一次挑戰視為進步的機會。未來，我希望能在工程方向繼續深造，成為一名對社會有貢獻的工程師。" data-en="I am resilient, meticulous, and helpful, enjoy collaborating in teams to complete tasks, and am always willing to challenge myself and step out of my comfort zone. I have served in multiple leadership roles including Vice-head Prefect, which has developed my organizational and communication skills. I believe resilience and discipline are key to success, and I always maintain a growth mindset, viewing every challenge as an opportunity to improve. In the future, I hope to further my studies in engineering and become an engineer who contributes to society.">
+                        I am resilient, meticulous, and helpful, enjoy collaborating in teams to complete tasks, and am always willing to challenge myself and step out of my comfort zone. I have served in multiple leadership roles including Vice-head Prefect, which has developed my organizational and communication skills. I believe resilience and discipline are key to success, and I always maintain a growth mindset, viewing every challenge as an opportunity to improve. In the future, I hope to further my studies in engineering and become an engineer who contributes to society.
                     </p>
-                    <p style="color:var(--slate);" data-zh="在這些項目中，我全程參與了從構思、設計、組裝到調試的每一個環節，協調團隊分工並整合技術資源。這些實踐經歷讓我深刻體會到理論與實踐相結合的重要性，也推動了學會形成「理論學習+實踐創新」的發展模式。正如校長評語中所提到的，我展現出的同理心、耐心和協作精神，贏得了老師和同學的信任，這些品質在團隊項目中得到了充分體現。" data-en="In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.">
-                        In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.
-                    </p>
+                    
+                    <!-- 個人成長經歷板塊 -->
+                    <div class="growth-experience" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(0, 243, 255, 0.2);">
+                        <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人成長經歷" data-en="Personal Growth Journey">Personal Growth Journey</h3>
+                        <p style="color:var(--slate); margin-bottom: 15px;" data-zh="作為一名香港中學生，我對工程與科技充滿嚮往與熱忱。這種熱情驅使我在MiTeen科技工程學會中找到了實踐的平台，並在學會中擔任重要角色。" data-en="As a Hong Kong secondary school student, I am deeply passionate about engineering and technology. This passion led me to find a platform for practice in the MiTeen Technology and Engineering Society, where I have taken on important roles.">
+                            As a Hong Kong secondary school student, I am deeply passionate about engineering and technology. This passion led me to find a platform for practice in the MiTeen Technology and Engineering Society, where I have taken on important roles.
+                        </p>
+                        <p style="color:var(--slate); margin-bottom: 15px;" data-zh="在MiTeen學會期間，我負責統籌策劃校內外STEAM講座、工作坊和科技競賽，這些經歷不僅提升了我的組織能力，也讓我更深入地了解科技教育的價值。更重要的是，我帶領團隊研發並落地了多個創新項目，包括智能跑步機（結合傳感器技術與數據分析）、自動抓娃娃機（機械結構設計與編程控制）、投籃計分機（電子電路設計與算法優化）等。" data-en="During my time in the MiTeen Society, I was responsible for coordinating and organizing STEAM lectures, workshops, and technology competitions both within and outside the school. These experiences not only enhanced my organizational skills but also deepened my understanding of the value of technology education. More importantly, I led teams to develop and implement multiple innovative projects, including a Smart Treadmill (combining sensor technology and data analysis), an Automatic Claw Machine (mechanical structure design and programming control), and a Basketball Scoring Machine (electronic circuit design and algorithm optimization).">
+                            During my time in the MiTeen Society, I was responsible for coordinating and organizing STEAM lectures, workshops, and technology competitions both within and outside the school. These experiences not only enhanced my organizational skills but also deepened my understanding of the value of technology education. More importantly, I led teams to develop and implement multiple innovative projects, including a Smart Treadmill (combining sensor technology and data analysis), an Automatic Claw Machine (mechanical structure design and programming control), and a Basketball Scoring Machine (electronic circuit design and algorithm optimization).
+                        </p>
+                        <p style="color:var(--slate);" data-zh="在這些項目中，我全程參與了從構思、設計、組裝到調試的每一個環節，協調團隊分工並整合技術資源。這些實踐經歷讓我深刻體會到理論與實踐相結合的重要性，也推動了學會形成「理論學習+實踐創新」的發展模式。正如校長評語中所提到的，我展現出的同理心、耐心和協作精神，贏得了老師和同學的信任，這些品質在團隊項目中得到了充分體現。" data-en="In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.">
+                            In these projects, I was fully involved in every stage from conception, design, assembly to debugging, coordinating team division of labor and integrating technical resources. These practical experiences have made me deeply appreciate the importance of combining theory with practice, and have helped the society develop a 'theoretical learning + practical innovation' development model. As mentioned in the principal's recommendation, the empathy, patience, and collaborative spirit I have demonstrated have earned the trust of teachers and peers, and these qualities have been fully reflected in team projects.
+                        </p>
                     </div>
+                </div>
+                
+                <!-- 展开/收起按钮 -->
+                <button class="about-expand-btn" id="aboutExpandBtn">
+                    <span data-zh="點擊展開全文" data-en="Click to Expand">Click to Expand</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
                 
                 <!-- CTA按鈕 -->
                 <div class="about-cta">
@@ -4251,57 +4331,38 @@
             });
         });
         
-        // 智能懸浮導航球 (FAB)
-        const fabMain = document.getElementById('fabMain');
-        const fabMenu = document.getElementById('fabMenu');
-        const fabEmail = document.getElementById('fabEmail');
-        const fabWhatsApp = document.getElementById('fabWhatsApp');
-        const fabResume = document.getElementById('fabResume');
-        const fabContact = document.getElementById('fabContact');
-        const terminalModal = document.getElementById('terminalModal');
+        // 折叠展开功能
+        const aboutExpandBtn = document.getElementById('aboutExpandBtn');
+        const aboutContentCollapsible = document.getElementById('aboutContentCollapsible');
         
-        if (fabMain) {
-            fabMain.addEventListener('click', () => {
-                fabMain.classList.toggle('active');
-                fabMenu.classList.toggle('active');
-            });
-        }
-        
-        if (fabEmail) {
-            fabEmail.addEventListener('click', () => {
-                const email = 'contact@example.com'; // 替換為你的郵箱
-                navigator.clipboard.writeText(email).then(() => {
-                    showNotification('Email copied to clipboard!');
-                });
-            });
-        }
-        
-        if (fabWhatsApp) {
-            fabWhatsApp.addEventListener('click', () => {
-                window.open('https://wa.me/85264399498', '_blank');
-            });
-        }
-        
-        if (fabResume) {
-            fabResume.addEventListener('click', () => {
-                // 替換為你的簡歷PDF鏈接
-                const resumeUrl = 'resume.pdf';
-                const link = document.createElement('a');
-                link.href = resumeUrl;
-                link.download = 'Ma_Ying_Yuen_Resume.pdf';
-                link.click();
-            });
-        }
-        
-        if (fabContact) {
-            fabContact.addEventListener('click', () => {
-                // 直接跳转到页脚的邮箱链接
-                const emailLink = document.getElementById('footerEmailLink');
-                if (emailLink) {
-                    emailLink.click();
+        if (aboutExpandBtn && aboutContentCollapsible) {
+            aboutExpandBtn.addEventListener('click', () => {
+                const isExpanded = aboutContentCollapsible.classList.contains('expanded');
+                
+                if (isExpanded) {
+                    aboutContentCollapsible.classList.remove('expanded');
+                    aboutExpandBtn.classList.remove('expanded');
+                    const span = aboutExpandBtn.querySelector('span');
+                    if (span) {
+                        span.setAttribute('data-zh', '點擊展開全文');
+                        span.setAttribute('data-en', 'Click to Expand');
+                        span.textContent = isEn ? 'Click to Expand' : '點擊展開全文';
+                    }
+                } else {
+                    aboutContentCollapsible.classList.add('expanded');
+                    aboutExpandBtn.classList.add('expanded');
+                    const span = aboutExpandBtn.querySelector('span');
+                    if (span) {
+                        span.setAttribute('data-zh', '點擊收起');
+                        span.setAttribute('data-en', 'Click to Collapse');
+                        span.textContent = isEn ? 'Click to Collapse' : '點擊收起';
+                    }
                 }
             });
         }
+        
+        const terminalModal = document.getElementById('terminalModal');
+        
         
         // 終端機風格聯絡表單
         const terminalClose = document.getElementById('terminalClose');
