@@ -1,12 +1,10 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
-        <!-- 響應式分離開發：檢測設備類型 -->
         <script>
-            // 檢測設備類型並設置對應的類名
             (function() {
                 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
                 if (isMobile) {
@@ -18,19 +16,16 @@
         </script>
         <title data-zh="馬英源 | 創新科技與工程作品集" data-en="Ma Ying Yuen | Tech & Engineering Portfolio">Ma Ying Yuen | Tech & Engineering Portfolio</title>
         
-        <!-- SEO & Open Graph 優化 -->
         <meta name="description" content="Ma Ying Yuen - STEM Student passionate about Smart City, Spatial Data Science, and AI. Winner of PolyU Smart City Competition 2025 (1st Runner-up) and multiple awards.">
         <meta name="keywords" content="Ma Ying Yuen, Smart City, Spatial Data, AI, Engineering, Portfolio, Hong Kong">
         <meta name="author" content="Ma Ying Yuen">
         
-        <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://your-username.github.io/">
         <meta property="og:title" content="Ma Ying Yuen | Tech & Engineering Portfolio">
         <meta property="og:description" content="STEM Student passionate about Smart City, Spatial Data Science, and AI. Winner of multiple competitions and awards.">
         <meta property="og:image" content="https://your-username.github.io/selfie.jpg">
         
-        <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="https://your-username.github.io/">
         <meta property="twitter:title" content="Ma Ying Yuen | Tech & Engineering Portfolio">
@@ -40,9 +35,7 @@
         <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         
         <style>
-            /* --- 1. 全局變量與重置 - 深空科技藍紫漸變 --- */
             :root {
-                /* 深空科技配色 */
                 --bg-dark: #0A0A1A;
                 --bg-purple: #1A0A2A;
                 --neon-blue: #00F3FF;
@@ -88,7 +81,6 @@
                 position: relative;
             }
             
-            /* 動態粒子背景容器 - 調整為背景裝飾，不遮擋內容 */
             .particles-container {
                 position: fixed;
                 top: 0;
@@ -96,9 +88,9 @@
                 width: 100%;
                 height: 100%;
                 pointer-events: none;
-                z-index: -1; /* 改為-1，確保在所有內容之後 */
+                z-index: -1;
                 overflow: hidden;
-                opacity: 0.3; /* 降低不透明度，使其更為背景裝飾 */
+                opacity: 0.3;
             }
             
             .particle {
@@ -107,7 +99,7 @@
                 background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(157, 78, 221, 0.05) 100%);
                 box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
                 animation: float 20s infinite ease-in-out;
-                filter: blur(2px); /* 添加模糊效果，使其更柔和 */
+                filter: blur(2px);
             }
             
             @keyframes float {
@@ -129,7 +121,6 @@
                 }
             }
             
-            /* 加載動畫 - DNA雙螺旋結構 */
             .loader {
                 position: fixed;
                 top: 0;
@@ -149,7 +140,6 @@
                 visibility: hidden;
             }
             
-            /* 蟲洞穿越轉場動畫 */
             @keyframes wormhole {
                 0% {
                     transform: scale(1) rotate(0deg);
@@ -226,7 +216,6 @@
                 }
             }
             
-            /* 滾動進度條 - 可交互 */
             .scroll-progress {
                 position: fixed;
                 top: 0;
@@ -255,7 +244,6 @@
             a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
             ul { list-style: none; }
 
-            /* --- 2. 導航欄 (Navbar) - 統一容器，Flex布局 --- */
             .navbar {
                 position: fixed; 
                 top: 0;
@@ -389,7 +377,6 @@
                 cursor: pointer; 
             }
 
-            /* --- 3. Hero 區域 - 3D立體化姓名與動態粒子背景 --- */
             .hero {
                 min-height: 100vh; 
                 display: flex;
@@ -469,7 +456,6 @@
                 max-width: 550px; 
             }
             
-            /* 光效箭頭 */
             .scroll-arrow {
                 position: absolute;
                 bottom: 30px;
@@ -551,13 +537,12 @@
                 box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
             }
 
-            /* --- 3D Hero Badge System (Random Walk Edition) --- */
             .hero-img-box { 
                 position: relative;
-                perspective: 1500px; /* 3D 透視 */
+                perspective: 1500px;
                 transform-style: preserve-3d;
                 z-index: 1;
-                padding: 100px 120px; /* 增加內邊距，為標籤提供空間 */
+                padding: 100px 120px;
                 min-width: 400px;
                 min-height: 400px;
                 display: flex;
@@ -575,7 +560,7 @@
                 border: 4px solid rgba(0, 243, 255, 0.3);
                 transition: transform 0.3s; 
                 position: relative;
-                z-index: 10; /* 確保頭像在標籤之上 */
+                z-index: 10;
             }
             .hero-img-box:hover .hero-img { 
                 transform: scale(1.02); 
@@ -606,21 +591,16 @@
                 border: 1px solid rgba(0, 243, 255, 0.3);
             }
 
-            /* 懸停效果：放大並突顯 */
             .hero-badge:hover { 
                 z-index: 100; 
                 background: rgba(10, 10, 26, 0.98);
                 box-shadow: 0 20px 40px rgba(0, 243, 255, 0.5), 0 0 30px rgba(157, 78, 221, 0.3);
-                /* 強制停止動畫並放大 */
                 transform: scale(1.2) translate3d(0, 0, 60px) !important; 
                 border-color: var(--neon-blue);
                 color: var(--neon-blue);
             }
             .hero-badge i { font-size: 1.1rem; }
 
-            /* --- 全方位隨機漫遊動畫庫 - 更不規則的飄動效果 --- */
-            
-            /* 軌跡 A: 大幅不規則圓形運動 */
             @keyframes wander-A {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 12.5% { transform: translate3d(-25px, -30px, 25px) rotateZ(-5deg); }
@@ -633,7 +613,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 B: 8字形運動 + 深度變化 */
             @keyframes wander-B {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 16.6% { transform: translate3d(35px, -25px, 30px) rotateZ(15deg); }
@@ -644,7 +623,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 C: 螺旋上升下降 */
             @keyframes wander-C {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 14.3% { transform: translate3d(28px, -15px, 20px) rotateZ(25deg); }
@@ -656,7 +634,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 D: 垂直波浪 + 水平擺動 */
             @keyframes wander-D {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 20% { transform: translate3d(18px, -40px, 30px) rotateZ(-12deg); }
@@ -666,7 +643,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 E: 不規則多邊形路徑 */
             @keyframes wander-E {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 20% { transform: translate3d(-32px, -18px, -30px) rotateZ(20deg); }
@@ -676,7 +652,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 F: 快速不規則跳動 */
             @keyframes wander-F {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 11.1% { transform: translate3d(25px, 20px, 22px) rotateZ(18deg); }
@@ -690,7 +665,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 軌跡 G: 緩慢橢圓運動 */
             @keyframes wander-G {
                 0% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
                 25% { transform: translate3d(35px, 0, 20px) rotateZ(10deg); }
@@ -699,10 +673,6 @@
                 100% { transform: translate3d(0, 0, 0) rotateZ(0deg); }
             }
 
-            /* 分配動畫與初始位置 - 圍繞頭像合理分布，避免重疊 */
-            /* 頭像區域約為 400px x 400px，標籤分布在周圍 */
-            
-            /* 1. 左上角 - PolyU Smart City */
             .hero-badge.b1 { 
                 top: 10px; 
                 left: -80px; 
@@ -711,7 +681,6 @@
                 animation-delay: 0s;
             }
             
-            /* 2. 右下角 - Caltex Robotics */
             .hero-badge.b2 { 
                 bottom: 20px; 
                 right: -90px; 
@@ -720,7 +689,6 @@
                 animation-delay: -3s; 
             }
             
-            /* 3. 右上角 - GBA Award */
             .hero-badge.b3 { 
                 top: 30px; 
                 right: -85px; 
@@ -729,7 +697,6 @@
                 animation-delay: -6s; 
             }
             
-            /* 4. 左下角 - GBA AI & Cyber */
             .hero-badge.b4 { 
                 bottom: 30px; 
                 left: -75px; 
@@ -738,7 +705,6 @@
                 animation-delay: -2s; 
             }
             
-            /* 5. 左側中間 - Creative Assembly */
             .hero-badge.b5 { 
                 top: 45%; 
                 left: -95px; 
@@ -748,7 +714,6 @@
                 animation-delay: -8s; 
             }
             
-            /* 6. 右側中間 - Robotics */
             .hero-badge.b6 { 
                 top: 60%; 
                 right: -80px; 
@@ -758,7 +723,6 @@
                 animation-delay: -4s; 
             }
             
-            /* 7. 頂部居中 - IT Challenge */
             .hero-badge.b7 { 
                 top: -50px; 
                 left: 50%; 
@@ -769,7 +733,6 @@
                 animation-delay: -5s; 
             }
 
-            /* --- 4. 通用 Section --- */
             .section { padding: 100px 20px; max-width: 1100px; margin: 0 auto; }
             .section-header { text-align: center; margin-bottom: 60px; }
             .section-subtitle { 
@@ -789,7 +752,6 @@
                 font-family: 'Orbitron', sans-serif;
             }
 
-            /* --- 5. About Me --- */
             .about-grid { 
                 display: grid; 
                 grid-template-columns: 1.2fr 0.8fr; 
@@ -798,7 +760,6 @@
                 position: relative;
             }
             
-            /* About Me背景裝飾 */
             .about-grid::before {
                 content: '';
                 position: absolute;
@@ -829,7 +790,6 @@
                 overflow: hidden;
             }
             
-            /* 折叠展开功能 */
             .about-content-collapsible {
                 max-height: 300px;
                 overflow: hidden;
@@ -1092,7 +1052,6 @@
                 justify-content: center;
             }
 
-            /* --- 6. Bento Grid (Interests) --- */
             .bento-grid { 
                 display: grid; 
                 grid-template-columns: repeat(4, 1fr); 
@@ -1100,7 +1059,6 @@
                 gap: 20px; 
             }
             
-            /* 手機端響應式修復 */
             @media (max-width: 768px) {
                 .bento-grid {
                     grid-template-columns: 1fr !important;
@@ -1166,7 +1124,6 @@
                 transform: translateY(0);
             }
             
-            /* 非均勻網格佈局 */
             .bento-item.small {
                 grid-column: span 1;
                 grid-row: span 1;
@@ -1188,7 +1145,6 @@
             .bento-item.large .bento-desc { color: rgba(226, 232, 240, 0.9); }
             .bento-item.large i { color: rgba(0, 243, 255, 0.3); }
             
-            /* 地圖組件樣式 */
             .bento-item.map-widget {
                 background: rgba(10, 10, 26, 0.8);
                 position: relative;
@@ -1259,7 +1215,6 @@
                 transform: translateY(0);
             }
             
-            /* 座右銘樣式 */
             .bento-item.quote {
                 background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 243, 255, 0.1));
                 justify-content: center;
@@ -1275,7 +1230,6 @@
                 font-weight: 500;
             }
 
-            /* --- 7. Experience (Timeline) - 垂直發光時間軸 --- */
             .timeline-container { 
                 position: relative;
                 padding-left: 50px;
@@ -1284,7 +1238,6 @@
                 gap: 50px; 
             }
             
-            /* 時間軸中線 */
             .timeline-container::before {
                 content: '';
                 position: absolute;
@@ -1308,7 +1261,6 @@
                 margin-left: 30px;
             }
             
-            /* 時間軸節點 */
             .exp-card::before {
                 content: '';
                 position: absolute;
@@ -1329,7 +1281,6 @@
                 box-shadow: 0 0 30px rgba(0, 243, 255, 1);
             }
             
-            /* 連接線 */
             .exp-card::after {
                 content: '';
                 position: absolute;
@@ -1396,7 +1347,6 @@
                 line-height: 1.7;
             }
             
-            /* 關鍵成就列表 */
             .exp-achievements {
                 margin-top: 20px;
                 padding-top: 20px;
@@ -1424,7 +1374,6 @@
                 font-weight: bold;
             }
             
-            /* 服務卡片 - 3D懸浮效果 */
             .services-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1506,8 +1455,6 @@
                 color: var(--neon-blue);
             }
 
-            /* --- 8. Works (Cards) --- */
-            /* 項目篩選欄 */
             .work-filters {
                 display: flex;
                 justify-content: center;
@@ -1597,7 +1544,6 @@
             }
             .read-more:hover { gap: 10px; }
             
-            /* --- 項目詳情沉浸式模態視窗 --- */
             .work-modal {
                 position: fixed;
                 top: 0;
@@ -1772,7 +1718,6 @@
                 }
             }
 
-            /* --- 9. Awards (Tabs) --- */
             .awards-tabs-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
             .award-tab { 
                 padding: 10px 20px; 
@@ -1827,7 +1772,6 @@
             .award-sub { font-size: 0.85rem; color: var(--text-light); opacity: 0.8; }
             .award-year { font-weight: 600; color: var(--neon-blue); font-size: 0.9rem; white-space: nowrap; }
 
-            /* --- 照片展示區 - 菱形輪播設計（核心功能） --- */
             .photo-gallery {
                 padding: 100px 20px;
                 max-width: 1400px;
@@ -2012,7 +1956,6 @@
                 transform: scale(1.3);
             }
             
-            /* 全屏畫廊模式 */
             .gallery-fullscreen {
                 position: fixed;
                 top: 0;
@@ -2063,8 +2006,6 @@
                 background: rgba(0, 243, 255, 0.2);
                 box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
             }
-            
-            /* --- 10. Footer - 懸浮式圓形圖標陣列 --- */
             
             .footer {
                 background: linear-gradient(135deg, #0A0A1A 0%, #1A0A2A 100%); 
@@ -2257,7 +2198,6 @@
                 transform: translateX(-50%) translateY(-5px);
             }
             
-            /* 不同平台品牌色 */
             .social-link[href*="instagram"]:hover {
                 border-color: #E4405F;
                 box-shadow: 0 0 40px rgba(228, 64, 95, 0.8);
@@ -2285,7 +2225,6 @@
                 padding-top: 20px; 
             }
             
-            /* --- 智能懸浮導航球 (FAB) --- */
             .fab-container {
                 position: fixed;
                 bottom: 30px;
@@ -2388,7 +2327,6 @@
                 transform: translateX(0);
             }
             
-            /* --- 終端機風格聯絡表單 --- */
             .terminal-modal {
                 position: fixed;
                 top: 0;
@@ -2615,7 +2553,6 @@
                 }
             }
             
-            /* 通知樣式 */
             .notification {
                 position: fixed;
                 bottom: 100px;
@@ -2643,9 +2580,6 @@
                 }
             }
 
-            /* --- 11. Responsive - 響應式分離開發 --- */
-            
-            /* 桌面版專用樣式 */
             .desktop-device .mobile-only {
                 display: none !important;
             }
@@ -2654,13 +2588,12 @@
                 display: none;
             }
             
-            /* 手機版專用樣式 */
             .mobile-device .desktop-only {
                 display: none !important;
             }
             
             .mobile-device .particles-container {
-                display: none; /* 移動端隱藏粒子以提升性能 */
+                display: none;
             }
             
             .mobile-device .hero-badge.b1,
@@ -2689,14 +2622,12 @@
                 display: inline-flex !important;
             }
             
-            /* 桌面端隱藏標籤雲 */
             @media (min-width: 901px) {
                 .hero-badge-cloud {
                     display: none;
                 }
             }
             
-            /* 手機版專用響應式樣式 */
             @media (max-width: 900px) {
                 .hero-container { 
                     grid-template-columns: 1fr; 
@@ -2748,7 +2679,6 @@
                     font-size: 0.85rem;
                 }
                 
-                /* 手機版簡化內容 */
                 .mobile-device .growth-experience {
                     padding: 20px 0;
                 }
@@ -2827,7 +2757,6 @@
                     grid-row: span 1;
                 }
                 
-                /* 手機版：隱藏桌面導航，顯示漢堡菜單 */
                 .navbar {
                 top: 0;
                     border-radius: 0;
@@ -2849,7 +2778,6 @@
                     display: block !important; 
                 }
                 
-                /* 手機版導航菜單 - 全屏遮罩 */
                 .nav-links.mobile-active { 
                     display: flex !important; 
                     flex-direction: column; 
@@ -2890,7 +2818,6 @@
                     transform: translateX(5px);
                 }
                 
-                /* Mobile Badge Optimizations: 調整位置避免重疊 */
                 .hero-img-box {
                     padding: 80px 20px;
                     min-width: auto;
@@ -2904,7 +2831,6 @@
                     font-size: 0.75rem;
                 }
                 
-                /* 移動端：隱藏漂浮徽章，顯示靜態標籤雲 */
                 .hero-badge.b1,
                 .hero-badge.b2,
                 .hero-badge.b3,
@@ -2921,7 +2847,6 @@
                     align-items: center;
                 }
                 
-                /* 標籤雲容器 - 移動端顯示 */
                 .hero-badge-cloud {
                     display: flex;
                     flex-wrap: wrap;
@@ -2941,7 +2866,6 @@
                 .award-row { flex-direction: column; align-items: flex-start; gap: 5px; }
                 .award-year { align-self: flex-start; margin-left: 45px; font-size: 0.8rem; background: rgba(0, 243, 255, 0.1); padding: 2px 8px; border-radius: 4px; }
                 
-                /* 照片輪播響應式 */
                 .photo-carousel {
                     height: 400px;
                 }
@@ -2986,7 +2910,7 @@
                 }
                 
                 .particles-container {
-                    display: none; /* 移動端隱藏粒子以提升性能 */
+                    display: none;
                 }
             }
             
@@ -3017,7 +2941,6 @@
         </style>
     </head>
     <body>
-        <!-- 加載動畫 -->
         <div class="loader" id="loader">
             <div class="dna-loader">
                 <div class="dna-strand"></div>
@@ -3025,13 +2948,10 @@
             </div>
         </div>
         
-        <!-- 滾動進度條 -->
         <div class="scroll-progress" id="scrollProgress"></div>
         
-        <!-- 粒子背景 -->
         <div class="particles-container" id="particlesContainer"></div>
         
-        <!-- 全屏畫廊 -->
         <div class="gallery-fullscreen" id="galleryFullscreen">
             <button class="gallery-close" id="galleryClose">
                 <i class="fas fa-times"></i>
@@ -3039,7 +2959,6 @@
             <img id="fullscreenImage" src="" alt="Fullscreen">
         </div>
         
-        <!-- 項目詳情沉浸式模態視窗 -->
         <div class="work-modal" id="workModal">
             <div class="work-modal-backdrop" id="workModalBackdrop"></div>
             <div class="work-modal-content">
@@ -3051,7 +2970,6 @@
             </div>
         </div>
         
-        <!-- 終端機風格聯絡表單 -->
         <div class="terminal-modal" id="terminalModal">
             <div class="terminal-backdrop" id="terminalBackdrop"></div>
             <div class="terminal-window">
@@ -3101,7 +3019,6 @@
             </div>
         </div>
         
-        <!-- 手機版導航遮罩層 -->
         <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
         
         <nav class="navbar">
@@ -3128,7 +3045,7 @@
             <div class="hero-container">
                 <div class="hero-text">
                     <span class="hero-tag" data-zh="你好，我是馬英源 👋" data-en="Hello, I'm Ma Ying Yuen 👋">Hello, I'm Ma Ying Yuen 👋</span>
-                    <h1 data-zh="專注於工程與科技領域" data-en="Focus on the fields of engineering and technology">Focus on the fields of engineering and technology<br><!--<span class="highlight" data-zh="工程創新的探索者" data-en="Engineering Innovation">Engineering Innovation</span>--></h1>
+                    <h1 data-zh="專注於工程與科技領域" data-en="Focus on the fields of engineering and technology">Focus on the fields of engineering and technology<br></h1>
                     <p class="hero-desc" data-zh="致力於利用工程與科技和AI技術解決現實問題。具備堅韌的成長思維與服務精神，目標成為一名造福社會的工程師。" data-en="Dedicated to using Spatial Data Science and AI to solve real-world problems. Possessing a growth mindset and a spirit of service, aiming to become an engineer who benefits society.">
                         Dedicated to using engineering, technology and AI to solve real-world problems. Possessing a growth mindset and a spirit of service, aiming to become an engineer who benefits society.
                     </p>
@@ -3142,7 +3059,6 @@
                 </div>
                 
                 <div class="hero-img-box">
-                    <!-- 個人頭像 - 使用 GitHub 倉庫中的 selfie.jpg -->
                     <img src="selfie.jpg" alt="Profile" class="hero-img" 
                         onerror="this.src='https://via.placeholder.com/400?text=Profile+Image'; this.onerror=null;">
                     
@@ -3202,7 +3118,6 @@
                         </div>
                     </div>
                     
-                    <!-- 移動端：標籤雲 -->
                     <div class="hero-badge-cloud">
                         <div class="hero-badge">
                             <i class="fas fa-city" style="color: var(--neon-blue);"></i>
@@ -3235,11 +3150,9 @@
                     </div>
                 </div>
                         </div>
-            <!-- 光效箭頭 -->
             <div class="scroll-arrow"></div>
         </section>
         
-        <!-- 照片展示區 -->
         <section id="photos" class="photo-gallery">
             <div class="section-header">
                 <span class="section-subtitle" data-zh="照片展示" data-en="Photo Gallery" style="color: var(--neon-blue);">Photo Gallery</span>
@@ -3252,7 +3165,6 @@
                 <div class="carousel-controls carousel-next" id="carouselNext">
                     <i class="fas fa-chevron-right"></i>
                         </div>
-                <!-- 照片項目將由JavaScript動態生成 -->
                         </div>
             <div class="carousel-dots" id="carouselDots"></div>
         </section>
@@ -3267,7 +3179,6 @@
                     <h2 class="about-hook" data-zh="連接數據與現實" data-en="Bridging Data & Reality">Bridging Data & Reality</h2>
                     <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人簡介" data-en="Biography">Biography</h3>
                     
-                    <!-- 折叠展开内容区域 -->
                     <div class="about-content-collapsible" id="aboutContentCollapsible">
                         <p style="color:var(--slate); margin-bottom: 15px;" data-zh="我是馬英源，現就讀於聖公會白約翰會督中學6D班。在過去幾年中，我從一名內斂的學生成長為積極主動的學生領袖。我熱衷於STEM領域，特別是空間數據科學、人工智能和工程技術的應用。在學業上，我擅長數學、電腦和科技相關科目，並在多次比賽中獲獎，包括香港理工大學「建造智慧城市比賽2025」亞軍、中文大學AI Hackathon 2025優異獎等。" data-en="I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.">
                             I am Ma Ying Yuen, a Form 6D student at S.K.H. Bishop Baker Secondary School. Over the years, I have grown from a reserved student into a proactive leader. I am passionate about STEM fields, especially Spatial Data Science, Artificial Intelligence, and Engineering Technology. Academically, I excel in mathematics, computer, and technology-related subjects, and have won awards in various competitions, including First Runner-up in PolyU's 'Build a Smart City Competition 2025' and Certificate of Merit in CUHK AI Hackathon 2025.
@@ -3276,7 +3187,6 @@
                             I am resilient, meticulous, and helpful, enjoy collaborating in teams to complete tasks, and am always willing to challenge myself and step out of my comfort zone. I have served in multiple leadership roles including Vice-head Prefect, which has developed my organizational and communication skills. I believe resilience and discipline are key to success, and I always maintain a growth mindset, viewing every challenge as an opportunity to improve. In the future, I hope to further my studies in engineering and become an engineer who contributes to society.
                         </p>
                         
-                        <!-- 個人成長經歷板塊 -->
                         <div class="growth-experience" style="margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(0, 243, 255, 0.2);">
                             <h3 style="margin-bottom: 20px; color: var(--neon-blue);" data-zh="個人成長經歷" data-en="Personal Growth Journey">Personal Growth Journey</h3>
                             <p style="color:var(--slate); margin-bottom: 15px;" data-zh="作為一名香港中學生，我對工程與科技充滿嚮往與熱忱。這種熱情驅使我在MiTeen學會中找到了實踐的平台，並在學會中擔任重要角色。" data-en="As a Hong Kong secondary school student, I am deeply passionate about engineering and technology. This passion led me to find a platform for practice in the MiTeen Club, where I have taken on important roles.">
@@ -3291,25 +3201,18 @@
                         </div>
                     </div>
                     
-                    <!-- 展开/收起按钮 -->
                     <button class="about-expand-btn" id="aboutExpandBtn">
                         <span data-zh="點擊展開全文" data-en="Click to Expand">Click to Expand</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     
-                    <!-- CTA按鈕 -->
                     <div class="about-cta">
                         <a href="#works" class="btn btn-primary" data-zh="查看作品" data-en="View My Journey">
                             <span data-zh="查看作品" data-en="View My Journey">View My Journey</span>
                             <i class="fas fa-arrow-right"></i>
                         </a>
-                        <!-- <a href="#" class="btn btn-outline" id="downloadCV" data-zh="下載簡歷" data-en="Download CV">
-                            <i class="fas fa-download"></i>
-                            <span data-zh="下載簡歷" data-en="Download CV">Download CV</span>
-                        </a> -->
                     </div>
                     
-                    <!-- 數據概覽 -->
                     <div class="about-stats">
                         <div class="about-stat-item">
                             <div class="about-stat-icon"><i class="fas fa-code"></i></div>
@@ -3399,7 +3302,6 @@
                 <h2 class="section-title" data-zh="探索不同領域" data-en="Exploring Fields">Exploring Fields</h2>
                 </div>
             <div class="bento-grid">
-                <!-- 2x2 大格 - 工程與機械人 -->
                 <div class="bento-item large">
                     <i class="fas fa-robot bento-icon"></i>
                     <div>
@@ -3410,7 +3312,6 @@
                     </div>
                 </div>
                 
-                <!-- 1x1 小格 - AI應用 -->
                 <div class="bento-item small">
                     <i class="fas fa-laptop-code bento-icon"></i>
                     <div>
@@ -3419,7 +3320,6 @@
                     </div>
                 </div>
                 
-                <!-- 1x1 小格 - 排球 -->
                 <div class="bento-item small">
                     <i class="fas fa-volleyball-ball bento-icon"></i>
                     <div>
@@ -3428,7 +3328,6 @@
                     </div>
                 </div>
                 
-                <!-- 1x1 小格 - 義工服務 -->
                 <div class="bento-item small">
                     <i class="fas fa-hands-helping bento-icon"></i>
                     <div>
@@ -3437,14 +3336,12 @@
                     </div>
                 </div>
                 
-                <!-- 2x1 橫條 - 座右銘 -->
                 <div class="bento-item medium quote">
                     <p class="bento-desc" data-zh="「我走得很慢，但我從不後退」" data-en="'I am a slow walker,but I never walk backwards.'">
                         "I am a slow walker,but I never walk backwards."
                     </p>
                 </div>
                 
-                <!-- 1x1 小格 - 地圖組件 -->
                 <div class="bento-item small map-widget">
                     <i class="fas fa-map-marker-alt bento-icon"></i>
                     <div>
@@ -3453,7 +3350,6 @@
                     </div>
                 </div>
                 
-                <!-- 2x2 大格 - Mi Teen學會 -->
                 <div class="bento-item large">
                     <i class="fas fa-lightbulb bento-icon"></i>
                     <div>
@@ -3532,7 +3428,6 @@
                 </div>
             </div>
             
-            <!-- 服務卡片區域 -->
             <div class="services-section" style="margin-top: 80px;">
                 <div class="section-header">
                     <h3 class="section-title" style="font-size: 2rem; margin-bottom: 50px;" data-zh="能力" data-en="Abilities">Abilities</h3>
@@ -3587,7 +3482,6 @@
                 <h2 class="section-title" data-zh="精選獲獎項目" data-en="Featured Projects">Featured Projects</h2>
                     </div>
             
-            <!-- 項目篩選欄 -->
             <div class="work-filters" id="workFilters">
                 <button class="filter-btn active" data-filter="all" data-zh="全部" data-en="All">All</button>
                 <button class="filter-btn" data-filter="smart-city" data-zh="智慧城市" data-en="Smart City">Smart City</button>
@@ -4056,7 +3950,6 @@
             </div>
         </footer>
         
-        <!-- SEO JSON-LD 結構化數據 -->
         <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -4091,9 +3984,8 @@
         </script>
 
         <script>
-            // Language Switch
             const langSwitch = document.getElementById('langSwitch');
-            let isEn = true; // Default to English as per request
+            let isEn = true;
 
             langSwitch.addEventListener('click', () => {
                 isEn = !isEn;
@@ -4104,14 +3996,12 @@
                 document.documentElement.lang = isEn ? 'en' : 'zh-HK';
             });
 
-            // Navbar Scroll Effect
             window.addEventListener('scroll', () => {
                 const nav = document.querySelector('.navbar');
                 if (window.scrollY > 50) nav.classList.add('scrolled');
                 else nav.classList.remove('scrolled');
             });
 
-            // Mobile Menu - 修復手機端導航
             const menuBtn = document.getElementById('menuToggle');
             const navLinks = document.getElementById('navLinks');
             const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -4134,7 +4024,6 @@
                     }
                 });
                 
-                // 點擊遮罩層關閉菜單
                 if (mobileMenuOverlay) {
                     mobileMenuOverlay.addEventListener('click', () => {
                         navLinks.classList.remove('mobile-active');
@@ -4146,7 +4035,6 @@
                 }
             }
 
-            // Close menu on link click
             if (navLinks) {
                 document.querySelectorAll('.nav-links a').forEach(link => {
                     link.addEventListener('click', () => {
@@ -4163,33 +4051,26 @@
                 });
             }
 
-            // Award Tabs Logic
             function switchTab(tabId) {
-                // Hide all lists
                 document.querySelectorAll('.award-list').forEach(el => {
                     el.style.display = 'none';
                     el.classList.remove('active');
                 });
                 
-                // Show active list
                 const activeList = document.getElementById(tabId);
                 activeList.style.display = 'block';
                 
-                // Reset tab buttons
                 document.querySelectorAll('.award-tab').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 
-                // Set current tab active
                 event.target.classList.add('active');
                 
-                // Re-trigger animation
                 activeList.style.animation = 'none';
-                activeList.offsetHeight; /* trigger reflow */
+                activeList.offsetHeight;
                 activeList.style.animation = 'fadeIn 0.5s ease-out';
             }
 
-            // Entrance Animations
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -4209,7 +4090,6 @@
                 observer.observe(el);
             });
             
-            // 時間軸高亮動畫
             const timelineObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -4226,12 +4106,10 @@
                 timelineObserver.observe(card);
             });
             
-            // 下載簡歷功能
             const downloadCV = document.getElementById('downloadCV');
             if (downloadCV) {
                 downloadCV.addEventListener('click', (e) => {
                     e.preventDefault();
-                    // 替換為你的簡歷PDF路徑
                     const resumeUrl = 'resume.pdf';
                     const link = document.createElement('a');
                     link.href = resumeUrl;
@@ -4240,7 +4118,6 @@
                 });
             }
             
-            // 加載動畫 - 蟲洞穿越轉場
             window.addEventListener('load', function() {
                 setTimeout(() => {
                     const loader = document.getElementById('loader');
@@ -4254,7 +4131,6 @@
                 }, 1000);
             });
             
-            // 項目詳情數據
             const workDetails = [
                 {
                     title: 'Smart City Spatial Data',
@@ -4314,7 +4190,6 @@
                 }
             ];
             
-            // 項目詳情模態視窗
             const workModal = document.getElementById('workModal');
             const workModalBackdrop = document.getElementById('workModalBackdrop');
             const workModalClose = document.getElementById('workModalClose');
@@ -4325,7 +4200,6 @@
                 const work = workDetails[index];
                 if (!work) return;
                 
-                // 獲取點擊的卡片位置（用於動畫效果）
                 const clickedCard = document.querySelectorAll('.work-card')[index];
                 if (clickedCard) {
                     const rect = clickedCard.getBoundingClientRect();
@@ -4336,10 +4210,8 @@
                     }
                 }
                 
-                // 填充內容
                 workModalMedia.innerHTML = `<img src="${work.image}" alt="${work.title}" loading="lazy">`;
                 
-                // 檢查當前語言（使用全局isEn變量）
                 const isZh = !isEn;
                 workModalInfo.innerHTML = `
                     <h2>${isZh ? work.titleZh : work.title}</h2>
@@ -4384,7 +4256,6 @@
             if (workModalBackdrop) workModalBackdrop.addEventListener('click', closeWorkModal);
             if (workModalClose) workModalClose.addEventListener('click', closeWorkModal);
             
-            // 為所有項目卡片添加點擊事件
             document.querySelectorAll('.read-more[data-work]').forEach((link, index) => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -4392,7 +4263,6 @@
                 });
             });
             
-            // 折叠展开功能
             const aboutExpandBtn = document.getElementById('aboutExpandBtn');
             const aboutContentCollapsible = document.getElementById('aboutContentCollapsible');
             
@@ -4424,8 +4294,6 @@
             
             const terminalModal = document.getElementById('terminalModal');
             
-            
-            // 終端機風格聯絡表單
             const terminalClose = document.getElementById('terminalClose');
             const terminalBackdrop = document.getElementById('terminalBackdrop');
             const terminalForm = document.getElementById('terminalForm');
@@ -4440,7 +4308,6 @@
             if (terminalClose) terminalClose.addEventListener('click', closeTerminal);
             if (terminalBackdrop) terminalBackdrop.addEventListener('click', closeTerminal);
             
-            // 終端輸入動畫
             const terminalInputs = document.querySelectorAll('.terminal-input');
             terminalInputs.forEach(input => {
                 input.addEventListener('focus', function() {
@@ -4451,7 +4318,6 @@
                 });
             });
             
-            // 表單提交
             if (terminalForm) {
                 terminalForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -4460,7 +4326,6 @@
                     const email = document.getElementById('terminalEmail').value;
                     const message = document.getElementById('terminalMessage').value;
                     
-                    // 顯示發送中
                     terminalResponse.className = 'terminal-response active';
                     terminalResponse.innerHTML = `
                         <div class="terminal-line">
@@ -4469,8 +4334,6 @@
                         </div>
                     `;
                     
-                    // 這裡可以使用 Formspree 或 EmailJS
-                    // 示例使用 Formspree (需要替換為你的表單ID)
                     try {
                         const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
                             method: 'POST',
@@ -4512,7 +4375,6 @@
                 });
             }
             
-            // 通知函數
             function showNotification(message) {
                 const notification = document.createElement('div');
                 notification.className = 'notification';
@@ -4525,13 +4387,10 @@
                 }, 3000);
             }
             
-            // 通知動畫樣式（通過CSS實現）
-            
-            // 創建粒子背景
             function createParticles() {
                 const container = document.getElementById('particlesContainer');
                 if (!container) return;
-                const particleCount = 30; /* 減少粒子數量，降低視覺干擾 */
+                const particleCount = 30;
                 
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
@@ -4549,7 +4408,6 @@
                 }
             }
             
-            // 滾動進度條
             function updateScrollProgress() {
                 const scrollProgress = document.getElementById('scrollProgress');
                 if (!scrollProgress) return;
@@ -4558,10 +4416,8 @@
                 scrollProgress.style.width = scrolled + '%';
             }
             
-            // 照片輪播功能
             const photos = [
                 {
-                    // Smart Attendance System - 使用 GitHub 倉庫中的圖片
                     src: 'Smart Attendance System.jpg',
                     title: 'Smart Attendance System',
                     titleZh: '智能考勤系統',
@@ -4592,7 +4448,6 @@
             function initPhotoCarousel() {
                 if (!carousel) return;
                 
-                // 創建照片項目
                 photos.forEach((photo, index) => {
                     const photoItem = document.createElement('div');
                     photoItem.className = 'photo-item';
@@ -4614,7 +4469,6 @@
                     photoItem.addEventListener('click', () => openFullscreen(photo.src));
                     carousel.appendChild(photoItem);
                     
-                    // 創建指示點
                     const dot = document.createElement('div');
                     dot.className = 'carousel-dot';
                     if (index === 0) dot.classList.add('active');
@@ -4622,7 +4476,6 @@
                     dotsContainer.appendChild(dot);
                 });
                 
-                // 自動輪播
                 setInterval(() => {
                     nextPhoto();
                 }, 8000);
@@ -4680,9 +4533,8 @@
                 });
             }
             
-            // 視差滾動效果（優化版）
             function initParallax() {
-                if (window.innerWidth <= 768) return; // 移動端禁用視差效果
+                if (window.innerWidth <= 768) return;
                 
                 const parallaxElements = [
                     { selector: '.hero-container', speed: 0.3 },
@@ -4715,12 +4567,10 @@
                 });
             }
             
-            // 滾動事件監聽
             window.addEventListener('scroll', function() {
                 updateScrollProgress();
             });
             
-            // 項目篩選功能
             const filterButtons = document.querySelectorAll('.filter-btn');
             const workCards = document.querySelectorAll('.work-card');
             
@@ -4728,11 +4578,9 @@
                 btn.addEventListener('click', () => {
                     const filter = btn.getAttribute('data-filter');
                     
-                    // 更新按鈕狀態
                     filterButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     
-                    // 篩選項目
                     workCards.forEach(card => {
                         const category = card.getAttribute('data-category');
                         if (filter === 'all' || category === filter) {
@@ -4752,8 +4600,6 @@
                 });
             });
             
-            
-            // 技能圓環動態加載
             const skillRings = document.querySelectorAll('.skill-ring');
             const skillObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -4763,7 +4609,6 @@
                         ring.style.setProperty('--pct', pct + '%');
                         ring.setAttribute('data-animated', 'true');
                         
-                        // 添加數值動畫
                         const valSpan = ring.querySelector('span') || document.createElement('span');
                         if (!ring.querySelector('span')) {
                             ring.appendChild(valSpan);
@@ -4794,7 +4639,6 @@
                 skillObserver.observe(ring);
             });
             
-            // 減弱動畫開關
             const reduceMotionToggle = document.getElementById('reduceMotionToggle');
             if (reduceMotionToggle) {
                 reduceMotionToggle.addEventListener('change', (e) => {
@@ -4802,20 +4646,17 @@
                     document.documentElement.style.setProperty('--animation-duration', reduceMotion ? '0s' : '');
                     
                     if (reduceMotion) {
-                        // 停止粒子動畫
                         const particles = document.querySelectorAll('.particle');
                         particles.forEach(p => {
                             p.style.animation = 'none';
                             p.style.opacity = '0.1';
                         });
                         
-                        // 停止徽章動畫
                         const badges = document.querySelectorAll('.hero-badge');
                         badges.forEach(b => {
                             b.style.animation = 'none';
                         });
                     } else {
-                        // 恢復動畫
                         const particles = document.querySelectorAll('.particle');
                         particles.forEach(p => {
                             p.style.animation = '';
@@ -4830,25 +4671,18 @@
                 });
             }
             
-            // 一鍵撥號功能
             const phoneLink = document.getElementById('phoneLink');
             if (phoneLink) {
                 phoneLink.addEventListener('click', (e) => {
-                    // tel: 協議會自動觸發撥號功能
-                    // 在手機上會直接撥號，在電腦上會提示使用默認通話應用
                 });
             }
             
-            // 一鍵發郵件功能
             const footerEmailLink = document.getElementById('footerEmailLink');
             if (footerEmailLink) {
                 footerEmailLink.addEventListener('click', (e) => {
-                    // mailto: 協議會自動打開郵件客戶端並填充收件人
-                    // 已通過 href="mailto:yingyuenma.alanhk@gmail.com" 實現
                 });
             }
             
-            // 移動端Hero區域優化 - 徽章改為橫向排列
             if (window.innerWidth <= 900) {
                 const heroBadges = document.querySelectorAll('.hero-badge.b1, .hero-badge.b2, .hero-badge.b3, .hero-badge.b4, .hero-badge.b5, .hero-badge.b6, .hero-badge.b7');
                 heroBadges.forEach(badge => {
@@ -4856,7 +4690,6 @@
                 });
             }
             
-            // 響應式調整
             window.addEventListener('resize', () => {
                 if (window.innerWidth <= 900) {
                     const heroBadges = document.querySelectorAll('.hero-badge.b1, .hero-badge.b2, .hero-badge.b3, .hero-badge.b4, .hero-badge.b5, .hero-badge.b6, .hero-badge.b7');
@@ -4866,7 +4699,6 @@
                 }
             });
             
-            // 初始化
             createParticles();
             updateScrollProgress();
             initPhotoCarousel();
@@ -4874,4 +4706,3 @@
         </script>
     </body>
     </html>
-
