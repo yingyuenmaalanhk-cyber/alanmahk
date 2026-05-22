@@ -57,6 +57,7 @@
                 --shadow-neon: 0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(157, 78, 221, 0.3);
                 --radius-md: 12px;
                 --radius-lg: 24px;
+                --transition: all 0.3s ease;
             }
 
             * {
@@ -121,99 +122,690 @@
                 }
             }
             
-            .loader {
+            /* ============ ENTRY GATE ============ */
+            .entry-gate {
                 position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #0A0A1A 0%, #1A0A2A 100%);
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: #06060F;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 10000;
-                transition: opacity 0.5s ease, visibility 0.5s ease;
+                z-index: 100000;
+                overflow: hidden;
             }
-            
-            .loader.hidden {
+            .entry-gate.transitioning {
+                pointer-events: none;
+            }
+            .entry-gate.hidden {
                 opacity: 0;
                 visibility: hidden;
+                transition: opacity 0.6s ease 0.3s, visibility 0s 1s;
             }
-            
-            @keyframes wormhole {
-                0% {
-                    transform: scale(1) rotate(0deg);
-                    opacity: 1;
-                }
-                50% {
-                    transform: scale(0.3) rotate(180deg);
-                    opacity: 0.5;
-                }
-                100% {
-                    transform: scale(0) rotate(360deg);
-                    opacity: 0;
-                }
+
+            /* Grid background */
+            .gate-grid {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-image:
+                    linear-gradient(rgba(0,243,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,243,255,0.03) 1px, transparent 1px);
+                background-size: 60px 60px;
+                animation: gateGridPan 20s linear infinite;
             }
-            
-            .loader.exiting {
-                animation: wormhole 0.8s ease-in-out forwards;
+            @keyframes gateGridPan {
+                0% { transform: translate(0, 0); }
+                100% { transform: translate(60px, 60px); }
             }
-            
-            @keyframes contentBurst {
-                0% {
-                    opacity: 0;
-                    transform: scale(0.8);
-                    filter: blur(20px);
-                }
-                100% {
-                    opacity: 1;
-                    transform: scale(1);
-                    filter: blur(0);
-                }
+
+            /* Floating particles in gate */
+            .gate-particle {
+                position: absolute;
+                width: 2px; height: 2px;
+                background: var(--neon-blue);
+                border-radius: 50%;
+                box-shadow: 0 0 6px var(--neon-blue), 0 0 12px var(--neon-blue);
+                animation: gateParticleFloat 6s ease-in-out infinite;
             }
-            
-            body.loaded > *:not(.loader) {
-                animation: contentBurst 0.6s ease-out forwards;
+            @keyframes gateParticleFloat {
+                0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+                20% { opacity: 1; }
+                50% { transform: translateY(-120px) translateX(30px); opacity: 0.8; }
+                80% { opacity: 0.2; }
             }
-            
-            .dna-loader {
-                width: 60px;
-                height: 100px;
+
+            /* Rotating rings */
+            .gate-rings {
+                position: absolute;
+                width: 500px; height: 500px;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+            }
+            .gate-ring {
+                position: absolute;
+                top: 50%; left: 50%;
+                border-radius: 50%;
+                border: 1px solid transparent;
+                transform: translate(-50%, -50%);
+            }
+            .gate-ring.r1 {
+                width: 420px; height: 420px;
+                border-top-color: rgba(0,243,255,0.4);
+                border-right-color: rgba(0,243,255,0.15);
+                animation: ringSpin1 12s linear infinite;
+            }
+            .gate-ring.r2 {
+                width: 360px; height: 360px;
+                border-bottom-color: rgba(157,78,221,0.4);
+                border-left-color: rgba(157,78,221,0.15);
+                animation: ringSpin2 10s linear infinite;
+            }
+            .gate-ring.r3 {
+                width: 280px; height: 280px;
+                border-top-color: rgba(0,243,255,0.2);
+                border-left-color: rgba(0,243,255,0.1);
+                animation: ringSpin1 8s linear infinite;
+            }
+            @keyframes ringSpin1 {
+                0% { transform: translate(-50%,-50%) rotate(0deg); }
+                100% { transform: translate(-50%,-50%) rotate(360deg); }
+            }
+            @keyframes ringSpin2 {
+                0% { transform: translate(-50%,-50%) rotate(0deg); }
+                100% { transform: translate(-50%,-50%) rotate(-360deg); }
+            }
+
+            /* Ring collapse on enter */
+            .gate-rings.collapsing .gate-ring {
+                animation-duration: 0.8s !important;
+            }
+            .gate-rings.collapsing .gate-ring.r1 {
+                border-top-color: rgba(0,243,255,0.9);
+                border-right-color: rgba(0,243,255,0.6);
+            }
+            .gate-rings.collapsing .gate-ring.r2 {
+                border-bottom-color: rgba(157,78,221,0.9);
+                border-left-color: rgba(157,78,221,0.6);
+            }
+
+            /* Center content */
+            .gate-content {
+                position: relative;
+                z-index: 2;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            /* Glitch title */
+            .gate-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: clamp(2rem, 5vw, 4rem);
+                font-weight: 900;
+                letter-spacing: 6px;
+                background: linear-gradient(135deg, #00F3FF 0%, #fff 40%, #9D4EDD 70%, #00F3FF 100%);
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                animation: gateTitleShine 3s linear infinite;
                 position: relative;
             }
-            
-            .dna-strand {
+            @keyframes gateTitleShine {
+                0% { background-position: 0% center; }
+                100% { background-position: 200% center; }
+            }
+            .gate-title::before,
+            .gate-title::after {
+                content: attr(data-text);
                 position: absolute;
-                width: 4px;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: linear-gradient(135deg, #00F3FF 0%, #fff 40%, #9D4EDD 70%, #00F3FF 100%);
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .gate-title::before {
+                animation: glitchTop 0.3s ease-in-out infinite alternate;
+                clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            }
+            .gate-title::after {
+                animation: glitchBottom 0.3s ease-in-out infinite alternate;
+                clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            }
+            @keyframes glitchTop {
+                0% { transform: translate(0, 0); opacity: 0.8; }
+                100% { transform: translate(3px, -2px); opacity: 0.5; }
+            }
+            @keyframes glitchBottom {
+                0% { transform: translate(0, 0); opacity: 0.8; }
+                100% { transform: translate(-3px, 2px); opacity: 0.5; }
+            }
+
+            .gate-subtitle {
+                font-family: 'Orbitron', sans-serif;
+                font-size: clamp(0.7rem, 1.5vw, 1rem);
+                letter-spacing: 8px;
+                color: var(--neon-blue);
+                text-shadow: 0 0 20px rgba(0,243,255,0.6);
+                opacity: 0.8;
+            }
+
+            .gate-divider {
+                width: 200px; height: 1px;
+                background: linear-gradient(90deg, transparent, var(--neon-blue), var(--electronic-purple), var(--neon-blue), transparent);
+                box-shadow: 0 0 10px rgba(0,243,255,0.5);
+            }
+
+            /* ENTER button */
+            .gate-enter-btn {
+                position: relative;
+                padding: 16px 60px;
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 700;
+                letter-spacing: 4px;
+                color: var(--neon-blue);
+                background: rgba(0,243,255,0.05);
+                border: 2px solid rgba(0,243,255,0.4);
+                border-radius: 4px;
+                cursor: pointer;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                text-shadow: 0 0 10px rgba(0,243,255,0.5);
+            }
+            .gate-enter-btn::before {
+                content: '';
+                position: absolute;
+                top: 0; left: -100%;
+                width: 100%; height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(0,243,255,0.15), transparent);
+                transition: left 0.5s ease;
+            }
+            .gate-enter-btn::after {
+                content: '';
+                position: absolute;
+                inset: -2px;
+                border: 2px solid transparent;
+                border-radius: 4px;
+                animation: gateBtnBorder 2s linear infinite;
+            }
+            @keyframes gateBtnBorder {
+                0%, 100% { border-color: transparent; }
+                25% { border-top-color: var(--neon-blue); }
+                50% { border-right-color: var(--electronic-purple); }
+                75% { border-bottom-color: var(--neon-blue); }
+                100% { border-left-color: var(--electronic-purple); }
+            }
+            .gate-enter-btn:hover {
+                background: rgba(0,243,255,0.12);
+                border-color: var(--neon-blue);
+                box-shadow: 0 0 30px rgba(0,243,255,0.4), 0 0 60px rgba(0,243,255,0.2), inset 0 0 20px rgba(0,243,255,0.1);
+                transform: scale(1.03);
+                color: #fff;
+                text-shadow: 0 0 20px rgba(0,243,255,1);
+            }
+            .gate-enter-btn:hover::before {
+                left: 100%;
+            }
+            .gate-enter-btn:active {
+                transform: scale(0.97);
+            }
+
+            /* Ripple on click */
+            .gate-ripple {
+                position: absolute;
+                border-radius: 50%;
+                border: 2px solid var(--neon-blue);
+                animation: gateRipple 1s ease-out forwards;
+                pointer-events: none;
+            }
+            @keyframes gateRipple {
+                0% { width: 0; height: 0; opacity: 1; }
+                100% { width: 600px; height: 600px; opacity: 0; margin-top: -300px; margin-left: -300px; }
+            }
+
+            /* Wormhole exit */
+            @keyframes wormholeExit {
+                0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+                40% { transform: scale(0.5); opacity: 0.8; filter: brightness(2); }
+                70% { transform: scale(0.1) rotate(180deg); opacity: 0.4; filter: brightness(3); }
+                100% { transform: scale(0) rotate(360deg); opacity: 0; filter: brightness(5); }
+            }
+            .entry-gate.exiting {
+                animation: wormholeExit 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+            .entry-gate.exiting .gate-rings,
+            .entry-gate.exiting .gate-content,
+            .entry-gate.exiting .gate-grid,
+            .entry-gate.exiting .gate-particle {
+                animation-duration: 0.15s !important;
+            }
+
+            /* Content burst in */
+            @keyframes contentBurst {
+                0% { opacity: 0; transform: scale(0.5); filter: blur(30px) brightness(3); }
+                60% { opacity: 0.8; filter: blur(5px) brightness(1.2); }
+                100% { opacity: 1; transform: scale(1); filter: blur(0) brightness(1); }
+            }
+            body.gate-passed > *:not(.entry-gate):not(.captcha-overlay) {
+                animation: contentBurst 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            }
+
+            /* ============ CAPTCHA ============ */
+            .captcha-overlay {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: rgba(6,6,15,0.95);
+                backdrop-filter: blur(10px);
+                z-index: 100001;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.4s ease, visibility 0s 0.4s;
+            }
+            .captcha-overlay.active {
+                opacity: 1;
+                visibility: visible;
+                transition: opacity 0.4s ease, visibility 0s 0s;
+            }
+
+            .captcha-box {
+                background: rgba(10,10,26,0.9);
+                border: 1px solid rgba(0,243,255,0.3);
+                border-radius: 16px;
+                padding: 35px 30px;
+                max-width: 420px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 0 40px rgba(0,243,255,0.15), 0 20px 60px rgba(0,0,0,0.5);
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .captcha-box::before {
+                content: '';
+                position: absolute;
+                top: -1px; left: 20%; right: 20%; height: 1px;
+                background: linear-gradient(90deg, transparent, var(--neon-blue), var(--electronic-purple), var(--neon-blue), transparent);
+            }
+            .captcha-icon {
+                font-size: 2.5rem;
+                color: var(--neon-blue);
+                margin-bottom: 12px;
+                animation: captchaIconPulse 2s ease-in-out infinite;
+            }
+            @keyframes captchaIconPulse {
+                0%, 100% { text-shadow: 0 0 10px rgba(0,243,255,0.5); }
+                50% { text-shadow: 0 0 25px rgba(0,243,255,0.9); }
+            }
+            .captcha-title {
+                font-family: 'Orbitron', sans-serif;
+                font-size: 1.1rem;
+                color: var(--neon-blue);
+                letter-spacing: 2px;
+                margin-bottom: 6px;
+            }
+            .captcha-desc {
+                font-size: 0.85rem;
+                color: var(--slate);
+                margin-bottom: 25px;
+            }
+
+            /* Puzzle slider */
+            .captcha-puzzle {
+                position: relative;
+                width: 100%;
+                height: 160px;
+                background: rgba(0,0,0,0.4);
+                border: 1px solid rgba(0,243,255,0.2);
+                border-radius: 10px;
+                overflow: hidden;
+                margin-bottom: 20px;
+            }
+            .captcha-puzzle-bg {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3rem;
+                color: rgba(0,243,255,0.08);
+                font-family: 'Orbitron', sans-serif;
+                pointer-events: none;
+                user-select: none;
+            }
+            /* The cutout area */
+            .captcha-cutout {
+                position: absolute;
+                top: 20px;
+                height: 120px;
+                width: 70px;
+                border: 2px dashed rgba(0,243,255,0.4);
+                border-radius: 6px;
+                background: rgba(0,243,255,0.05);
+                transition: left 0.05s linear;
+                pointer-events: none;
+            }
+            /* The movable piece */
+            .captcha-piece {
+                position: absolute;
+                top: 20px;
+                width: 70px;
+                height: 120px;
+                background: linear-gradient(135deg, rgba(0,243,255,0.2), rgba(157,78,221,0.2));
+                border: 2px solid rgba(0,243,255,0.6);
+                border-radius: 6px;
+                cursor: grab;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                color: rgba(0,243,255,0.7);
+                z-index: 2;
+                transition: none;
+                user-select: none;
+                touch-action: none;
+            }
+            .captcha-piece:active { cursor: grabbing; }
+            .captcha-piece.matched {
+                border-color: #10b981 !important;
+                background: rgba(16,185,129,0.15) !important;
+                color: #10b981 !important;
+                box-shadow: 0 0 20px rgba(16,185,129,0.5) !important;
+            }
+            .captcha-piece.wrong {
+                border-color: #ef4444 !important;
+                background: rgba(239,68,68,0.15) !important;
+                animation: shake 0.5s ease;
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-12px); }
+                50% { transform: translateX(12px); }
+                75% { transform: translateX(-8px); }
+            }
+
+            /* Slider track */
+            .captcha-slider-track {
+                position: relative;
+                width: 100%;
+                height: 46px;
+                background: rgba(0,0,0,0.4);
+                border: 1px solid rgba(0,243,255,0.2);
+                border-radius: 23px;
+                overflow: hidden;
+                margin-bottom: 12px;
+            }
+            .captcha-slider-fill {
                 height: 100%;
-                background: linear-gradient(135deg, #00F3FF 0%, #9D4EDD 100%);
+                background: linear-gradient(90deg, rgba(0,243,255,0.15), rgba(0,243,255,0.3));
+                border-radius: 23px;
+                width: 0%;
+                transition: width 0.05s linear;
+            }
+            .captcha-slider-thumb {
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 40px; height: 40px;
+                background: linear-gradient(135deg, #0A0A1A, #1A0A2A);
+                border: 2px solid var(--neon-blue);
+                border-radius: 50%;
+                cursor: grab;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--neon-blue);
+                font-size: 1.1rem;
+                box-shadow: 0 0 15px rgba(0,243,255,0.3);
+                z-index: 2;
+                transition: none;
+                touch-action: none;
+            }
+            .captcha-slider-thumb:active { cursor: grabbing; }
+            .captcha-slider-label {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 0.8rem;
+                color: rgba(255,255,255,0.3);
+                pointer-events: none;
+                letter-spacing: 2px;
+            }
+
+            .captcha-status {
+                font-size: 0.8rem;
+                color: var(--slate);
+                min-height: 20px;
+                transition: color 0.3s;
+                margin-top: auto;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+            }
+            .captcha-status.success { color: #10b981; }
+            .captcha-status.error { color: #ef4444; }
+
+            .captcha-timer {
+                font-size: 0.78rem;
+                color: rgba(0,243,255,0.5);
+                min-height: 18px;
+                text-align: center;
+                font-family: 'Orbitron', monospace;
+                letter-spacing: 1px;
+                transition: color 0.3s;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .captcha-timer.done {
+                color: #10b981;
+                font-size: 0.9rem;
+                font-weight: 600;
+                animation: captchaSuccessPop 0.5s ease-out;
+            }
+
+            .captcha-success-anim {
+                position: absolute;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80px; height: 80px;
+                pointer-events: none;
+                opacity: 0;
+                transition: all 0.4s ease;
+            }
+            .captcha-success-anim.show {
+                opacity: 1;
+                animation: captchaSuccessPop 0.5s ease-out;
+            }
+            @keyframes captchaSuccessPop {
+                0% { transform: translate(-50%,-50%) scale(0); }
+                50% { transform: translate(-50%,-50%) scale(1.2); }
+                100% { transform: translate(-50%,-50%) scale(1); }
+            }
+
+            /* ============ VISUAL ENHANCEMENTS ============ */
+
+            /* Cyber grid background */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background-image:
+                    linear-gradient(rgba(0,243,255,0.015) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,243,255,0.015) 1px, transparent 1px);
+                background-size: 80px 80px;
+                background-position: center center;
+                pointer-events: none;
+                z-index: -2;
+                animation: gridShift 30s linear infinite;
+            }
+            @keyframes gridShift {
+                0% { background-position: 0 0; }
+                100% { background-position: 80px 80px; }
+            }
+
+            /* Enhanced glass effect for cards */
+            .info-card, .bento-item, .exp-card, .service-card, .work-card, .recommendation-box, .awards-wrapper {
+                backdrop-filter: blur(20px) saturate(120%);
+                -webkit-backdrop-filter: blur(20px) saturate(120%);
+            }
+
+            /* Enhanced neon glow on hover for cards */
+            .bento-item:hover {
+                box-shadow: 0 0 30px rgba(0,243,255,0.35), 0 0 60px rgba(157,78,221,0.2), 0 15px 40px rgba(0,0,0,0.4) !important;
+            }
+            .exp-card:hover {
+                box-shadow: 0 0 35px rgba(0,243,255,0.4), 0 0 70px rgba(157,78,221,0.25), 0 15px 40px rgba(0,0,0,0.4) !important;
+            }
+            .work-card:hover {
+                box-shadow: 0 0 30px rgba(0,243,255,0.4), 0 15px 40px rgba(0,0,0,0.4) !important;
+            }
+
+            /* Animated border gradient for sections */
+            .section::before {
+                content: '';
+                display: block;
+                width: 140px; height: 3px;
+                margin: 0 auto 40px;
+                background: linear-gradient(90deg, transparent, var(--neon-blue), var(--electronic-purple), var(--neon-blue), transparent);
+                border-radius: 3px;
+                box-shadow: 0 0 12px rgba(0,243,255,0.3), 0 0 24px rgba(157,78,221,0.12);
+            }
+
+            /* Enhanced navbar glow */
+            .navbar {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 1px 0 rgba(0,243,255,0.15);
+            }
+            .navbar.scrolled {
+                box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0,243,255,0.1);
+            }
+
+            /* Hero section enhanced */
+            .hero::after {
+                content: '';
+                position: absolute;
+                bottom: 0; left: 0;
+                width: 100%; height: 200px;
+                background: linear-gradient(to top, rgba(10,10,26,0.8), transparent);
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            /* Enhanced skill ring animation */
+            .skill-item-new {
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .skill-item-new:hover {
+                box-shadow: 0 12px 40px rgba(0,0,0,0.4),
+                            0 0 2px rgba(0,243,255,0.3) inset,
+                            0 0 35px rgba(0,243,255,0.15),
+                            0 0 60px rgba(157,78,221,0.1) !important;
+            }
+
+            /* Section title enhanced glow */
+            .section-title {
+                text-shadow: 0 0 30px rgba(0,243,255,0.15);
+            }
+
+            /* Filter buttons enhanced */
+            .filter-btn {
+                position: relative;
+                overflow: hidden;
+            }
+            .filter-btn::after {
+                content: '';
+                position: absolute;
+                bottom: 0; left: 50%;
+                transform: translateX(-50%);
+                width: 0; height: 2px;
+                background: var(--primary-gradient);
+                transition: width 0.3s ease;
+            }
+            .filter-btn:hover::after {
+                width: 60%;
+            }
+
+            /* Award tab enhanced */
+            .award-tab {
+                position: relative;
+                overflow: hidden;
+            }
+            .award-tab::after {
+                content: '';
+                position: absolute;
+                bottom: 0; left: 50%;
+                transform: translateX(-50%);
+                width: 0; height: 2px;
+                background: var(--primary-gradient);
+                transition: width 0.3s ease;
                 border-radius: 2px;
-                animation: dnaRotate 2s linear infinite;
             }
-            
-            .dna-strand:nth-child(1) {
-                left: 0;
-                animation-delay: 0s;
+            .award-tab:hover::after, .award-tab.active::after {
+                width: 70%;
             }
-            
-            .dna-strand:nth-child(2) {
-                right: 0;
-                animation-delay: 1s;
+
+            /* Enhanced scrollbar */
+            ::-webkit-scrollbar { width: 8px; }
+            ::-webkit-scrollbar-track { background: rgba(10,10,26,0.5); }
+            ::-webkit-scrollbar-thumb {
+                background: linear-gradient(180deg, var(--neon-blue), var(--electronic-purple));
+                border-radius: 4px;
+                box-shadow: 0 0 10px rgba(0,243,255,0.3);
             }
-            
-            @keyframes dnaRotate {
-                0% {
-                    transform: rotateY(0deg);
-                    opacity: 1;
-                }
-                50% {
-                    transform: rotateY(180deg);
-                    opacity: 0.5;
-                }
-                100% {
-                    transform: rotateY(360deg);
-                    opacity: 1;
-                }
+            ::-webkit-scrollbar-thumb:hover {
+                box-shadow: 0 0 20px rgba(0,243,255,0.5);
+            }
+
+            /* Photo carousel enhanced */
+            .photo-frame {
+                transition: box-shadow 0.5s ease;
+            }
+            .photo-item.active .photo-frame {
+                box-shadow: 0 0 25px rgba(0,243,255,0.5), 0 0 50px rgba(157,78,221,0.25), inset 0 0 30px rgba(0,243,255,0.15);
+            }
+
+            /* Terminal window enhanced */
+            .terminal-window {
+                box-shadow: 0 0 40px rgba(0,243,255,0.3), 0 0 80px rgba(157,78,221,0.15), 0 20px 60px rgba(0,0,0,0.5);
+            }
+
+            /* Footer enhanced */
+            .footer::after {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(0,243,255,0.3), rgba(157,78,221,0.3), rgba(0,243,255,0.3), transparent);
+            }
+
+            /* About hook text glow */
+            .about-hook {
+                filter: drop-shadow(0 0 20px rgba(0,243,255,0.3));
+            }
+
+            /* Recommendation box enhanced */
+            .recommendation-box {
+                backdrop-filter: blur(20px) saturate(120%);
+                -webkit-backdrop-filter: blur(20px) saturate(120%);
+            }
+
+            /* Work modal enhanced */
+            .work-modal-content {
+                box-shadow: 0 0 50px rgba(0,243,255,0.4), 0 0 100px rgba(157,78,221,0.2), 0 30px 80px rgba(0,0,0,0.6);
             }
             
             .scroll-progress {
@@ -996,73 +1588,21 @@
                 opacity: 1;
             }
             .skill-info { display: flex; align-items: center; gap: 15px; }
-            .skill-icon { width: 40px; height: 40px; background: #eff6ff; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-            .skill-ring { 
-                width: 80px; 
-                height: 80px; 
-                border-radius: 50%; 
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .skill-ring::before {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                border: 8px solid rgba(0, 243, 255, 0.1);
-            }
-            
-            .skill-ring::after {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                border: 8px solid transparent;
-                border-top-color: var(--neon-blue);
-                border-right-color: var(--neon-blue);
-                clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-                transform: rotate(0deg);
-                transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), clip-path 0.3s;
-            }
-            
-            .skill-ring[data-animated="true"]::after {
-                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-            }
-            
-            .skill-ring span {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-weight: 700;
-                color: var(--neon-blue);
-                font-size: 0.9rem;
-                z-index: 1;
-                background: rgba(10, 10, 26, 0.8);
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+            .skill-icon { width: 40px; height: 40px; background: #eff6ff; color: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; line-height: 1; }
+            .skill-info > div:last-of-type { line-height: 1.5; }
+            .skill-info > div:last-of-type > div:first-child { margin-bottom: 2px; }
 
-            .bento-grid { 
-                display: grid; 
-                grid-template-columns: repeat(4, 1fr); 
-                grid-template-rows: repeat(2, 200px); 
-                gap: 20px; 
+            .bento-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-auto-rows: 180px;
+                gap: 20px;
             }
             
             @media (max-width: 768px) {
                 .bento-grid {
                     grid-template-columns: 1fr !important;
-                    grid-template-rows: auto !important;
+                    grid-auto-rows: auto !important;
                     gap: 15px;
                 }
                 
@@ -1124,17 +1664,36 @@
                 transform: translateY(0);
             }
             
+            .bento-item.small, .bento-item.medium {
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
             .bento-item.small {
                 grid-column: span 1;
                 grid-row: span 1;
             }
-            
             .bento-item.medium {
                 grid-column: span 2;
                 grid-row: span 1;
             }
+            .bento-item.small .bento-icon,
+            .bento-item.medium .bento-icon {
+                align-self: center;
+                margin-bottom: 10px;
+            }
+            .bento-item.small .bento-desc,
+            .bento-item.medium .bento-desc {
+                opacity: 1;
+                transform: none;
+            }
+            .bento-item.small:hover .bento-desc,
+            .bento-item.medium:hover .bento-desc {
+                opacity: 1;
+                transform: none;
+            }
             
-            .bento-item.large { 
+            .bento-item.large {
                 grid-column: span 2; 
                 grid-row: span 2;
                 background: linear-gradient(135deg, rgba(0, 243, 255, 0.15), rgba(157, 78, 221, 0.15)); 
@@ -1143,7 +1702,7 @@
             }
             
             .bento-item.large .bento-desc { color: rgba(226, 232, 240, 0.9); }
-            .bento-item.large i { color: rgba(0, 243, 255, 0.3); }
+            .bento-item.large .bento-icon { font-size: 2.5rem; }
             
             .bento-item.map-widget {
                 background: rgba(10, 10, 26, 0.8);
@@ -1230,6 +1789,52 @@
                 font-weight: 500;
             }
 
+            /* === Beautification: card depth & scan-line === */
+            .bento-item {
+                box-shadow: 0 4px 24px rgba(0,0,0,0.35),
+                            0 0 0 1px rgba(0,243,255,0.06) inset,
+                            0 0 40px rgba(0,243,255,0.02);
+            }
+            .bento-item::after {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,243,255,0.012) 2px,
+                    rgba(0,243,255,0.012) 4px
+                );
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 0;
+            }
+            .bento-item:hover::after {
+                opacity: 1;
+            }
+            .bento-item > * { position: relative; z-index: 1; }
+
+            /* Enhanced icon glow */
+            .bento-icon {
+                filter: drop-shadow(0 0 6px rgba(0,243,255,0.12));
+                transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .bento-item:hover .bento-icon {
+                filter: drop-shadow(0 0 16px rgba(0,243,255,0.45));
+                transform: scale(1.12);
+            }
+
+            /* Enhanced title */
+            .bento-title {
+                letter-spacing: 0.3px;
+                transition: color 0.35s ease, text-shadow 0.35s ease;
+            }
+            .bento-item:hover .bento-title {
+                text-shadow: 0 0 18px rgba(0,243,255,0.3);
+            }
+
             .timeline-container { 
                 position: relative;
                 padding-left: 50px;
@@ -1299,17 +1904,17 @@
             }
             
             .exp-card.visible {
-                animation: slideInFromLeft 0.6s ease-out;
+                animation: fadeInUp 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
             }
-            
-            @keyframes slideInFromLeft {
+
+            @keyframes fadeInUp {
                 from {
                     opacity: 0;
-                    transform: translateX(-30px);
+                    transform: translateY(20px);
                 }
                 to {
                     opacity: 1;
-                    transform: translateX(0);
+                    transform: translateY(0);
                 }
             }
             
@@ -2651,9 +3256,9 @@
                 .about-grid, .exp-card { 
                     grid-template-columns: 1fr; 
                 }
-                .bento-grid { 
-                    grid-template-columns: 1fr; 
-                    grid-template-rows: auto; 
+                .bento-grid {
+                    grid-template-columns: 1fr;
+                    grid-auto-rows: auto;
                 }
                 .bento-item.large { 
                     grid-column: span 1; 
@@ -2748,7 +3353,7 @@
                 
                 .mobile-device .bento-grid {
                     grid-template-columns: 1fr;
-                    grid-template-rows: auto;
+                    grid-auto-rows: auto;
                 }
                 
                 .mobile-device .bento-item.large,
@@ -2938,13 +3543,110 @@
                     font-size: 18px;
                 }
             }
+
+            /* ============ SCROLL & HOVER ANIMATIONS ============ */
+
+            /* Cards base animation state */
+            .anim-card {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                            transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            }
+            .anim-card.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Smooth hover float */
+            .bento-item,
+            .skill-item-new,
+            .service-card,
+            .work-card,
+            .exp-card {
+                transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                            transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                            box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                            border-color 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                            border-radius 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            }
+
+            .bento-item:hover {
+                transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
+                box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 243, 255, 0.35);
+                border-color: rgba(0, 243, 255, 0.55);
+                border-radius: 16px;
+            }
+
+            .skill-item-new:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45),
+                            0 0 3px rgba(0, 243, 255, 0.25) inset,
+                            0 0 35px rgba(0, 243, 255, 0.15),
+                            0 0 60px rgba(157, 78, 221, 0.12);
+                border-radius: 18px;
+            }
+
+            .service-card:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--shadow-lg), 0 0 50px rgba(0, 243, 255, 0.4);
+                border-radius: 28px;
+            }
+
+            .work-card:hover {
+                transform: translateY(-8px);
+                box-shadow: var(--shadow-lg), 0 0 35px rgba(0, 243, 255, 0.4);
+                border-radius: 16px;
+            }
+
+            .exp-card:hover {
+                transform: translateX(10px) translateY(-8px);
+                box-shadow: var(--shadow-lg), 0 0 45px rgba(0, 243, 255, 0.45);
+                border-radius: 16px;
+            }
         </style>
     </head>
     <body>
-        <div class="loader" id="loader">
-            <div class="dna-loader">
-                <div class="dna-strand"></div>
-                <div class="dna-strand"></div>
+        <!-- ====== ENTRY GATE ====== -->
+        <div class="entry-gate" id="entryGate">
+            <div class="gate-grid"></div>
+            <div class="gate-rings" id="gateRings">
+                <div class="gate-ring r1"></div>
+                <div class="gate-ring r2"></div>
+                <div class="gate-ring r3"></div>
+            </div>
+            <div class="gate-content">
+                <div class="gate-title" data-text="MA YING YUEN">MA YING YUEN</div>
+                <div class="gate-subtitle">ENGINEERING &amp; TECHNOLOGY</div>
+                <div class="gate-divider"></div>
+                <button class="gate-enter-btn" id="gateEnterBtn">ENTER SITE</button>
+            </div>
+        </div>
+
+        <!-- ====== CAPTCHA OVERLAY ====== -->
+        <div class="captcha-overlay" id="captchaOverlay">
+            <div class="captcha-box">
+                <div class="captcha-icon"><i class="fas fa-shield-halting"></i></div>
+                <div class="captcha-title">HUMAN VERIFICATION</div>
+                <div class="captcha-desc">Drag the puzzle piece to match the target area</div>
+                <div class="captcha-puzzle" id="captchaPuzzle">
+                    <div class="captcha-puzzle-bg">
+                        <i class="fas fa-fingerprint"></i>
+                    </div>
+                    <div class="captcha-cutout" id="captchaCutout"></div>
+                    <div class="captcha-piece" id="captchaPiece">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                </div>
+                <div class="captcha-slider-track" id="captchaSliderTrack">
+                    <div class="captcha-slider-fill" id="captchaSliderFill"></div>
+                    <div class="captcha-slider-thumb" id="captchaSliderThumb">
+                        <i class="fas fa-arrows-left-right"></i>
+                    </div>
+                    <div class="captcha-slider-label">SLIDE TO VERIFY</div>
+                </div>
+                <div class="captcha-status" id="captchaStatus"></div>
+                <div class="captcha-timer" id="captchaTimer"></div>
             </div>
         </div>
         
@@ -3254,43 +3956,66 @@
                 <div class="skill-list">
                     <div class="skill-item-new">
                         <div class="skill-info">
-                            <div class="skill-icon"><i class="fas fa-map-marked-alt"></i></div>
+                            <div class="skill-icon">🗺️</div>
                             <div>
                                 <div style="font-weight:700;" data-zh="空間數據科學" data-en="Spatial Data Science">Spatial Data Science</div>
                                 <div style="font-size:0.8rem; color:var(--slate);">QGIS</div>
                         </div>
                         </div>
-                        <div class="skill-ring" style="--pct: 0%;" data-val="92%"><span>92%</span></div>
                     </div>
                     <div class="skill-item-new">
                         <div class="skill-info">
-                            <div class="skill-icon"><i class="fas fa-code"></i></div>
+                            <div class="skill-icon">💻</div>
                             <div>
                                 <div style="font-weight:700;" data-zh="程式設計" data-en="Programming">Programming</div>
-                                <div style="font-size:0.8rem; color:var(--slate);">Python, C++, HTML</div>
+                                <div style="font-size:0.8rem; color:var(--slate);">Python, C++, MySQL, HTML</div>
                         </div>
                         </div>
-                        <div class="skill-ring" style="--pct: 0%;" data-val="90%"><span>90%</span></div>
                     </div>
                     <div class="skill-item-new">
                         <div class="skill-info">
-                            <div class="skill-icon"><i class="fas fa-users-cog"></i></div>
+                            <div class="skill-icon">🌟</div>
                             <div>
                                 <div style="font-weight:700;" data-zh="領導" data-en="Leadership">Leadership</div>
                                 <div style="font-size:0.8rem; color:var(--slate);">Vice-Head Prefect</div>
                         </div>
                         </div>
-                        <div class="skill-ring" style="--pct: 0%;" data-val="98%"><span>98%</span></div>
                     </div>
                     <div class="skill-item-new">
                         <div class="skill-info">
-                            <div class="skill-icon"><i class="fas fa-users-cog"></i></div>
+                            <div class="skill-icon">🤝</div>
                             <div>
                                 <div style="font-weight:700;" data-zh="服務" data-en="Service">Service</div>
-                                <div style="font-size:0.8rem; color:var(--slate);">MiTeen Club Chairperson</div>
+                                <div style="font-size:0.8rem; color:var(--slate);">House Committee Member</div>
                         </div>
                         </div>
-                        <div class="skill-ring" style="--pct: 0%;" data-val="95%"><span>95%</span></div>
+                    </div>
+                    <div class="skill-item-new">
+                        <div class="skill-info">
+                            <div class="skill-icon">💡</div>
+                            <div>
+                                <div style="font-weight:700;" data-zh="解決問題" data-en="Problem Solving">Problem Solving</div>
+                                <div style="font-size:0.8rem; color:var(--slate);" data-zh="2nd in PolyU Build a Smart City Competition 2025" data-en="2nd-PolyU Build a Smart City Competition 2025">2nd in PolyU Build a Smart City Competition 2025</div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="skill-item-new">
+                        <div class="skill-info">
+                            <div class="skill-icon">🧠</div>
+                            <div>
+                                <div style="font-weight:700;" data-zh="批判思維" data-en="Critical Thinking">Critical Thinking</div>
+                                <div style="font-size:0.8rem; color:var(--slate);" data-zh="Merit Winner in Cyber Attack and Defence Elite" data-en="Merit Winner in Cyber Attack and Defence Elite">Merit Winner in Cyber Attack and Defence Elite</div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="skill-item-new">
+                        <div class="skill-info">
+                            <div class="skill-icon">💪</div>
+                            <div>
+                                <div style="font-weight:700;" data-zh="勤奮與責任感" data-en="Diligence & Responsibility">Diligence & Responsibility</div>
+                                <div style="font-size:0.8rem; color:var(--slate);" data-zh="Academic Improvement Awards" data-en="Academic Improvement Awards">Academic Improvement Awards</div>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3302,8 +4027,8 @@
                 <h2 class="section-title" data-zh="探索不同領域" data-en="Exploring Fields">Exploring Fields</h2>
                 </div>
             <div class="bento-grid">
-                <div class="bento-item large">
-                    <i class="fas fa-robot bento-icon"></i>
+                <div class="bento-item medium">
+                    <span class="bento-icon">🤖</span>
                     <div>
                         <h3 class="bento-title" data-zh="工程與機械人" data-en="Engineering">Engineering</h3>
                         <p class="bento-desc" data-zh="在加德士機械人工程師教室競賽中獲得全場總冠軍及多項獎項。熱衷於動手組裝與解決結構問題。" data-en="Overall champion and multiple awards in Caltex Robot Competition. Passionate about building and structural problem solving.">
@@ -3311,53 +4036,85 @@
                         </p>
                     </div>
                 </div>
-                
-                <div class="bento-item small">
-                    <i class="fas fa-laptop-code bento-icon"></i>
+
+                <div class="bento-item medium">
+                    <span class="bento-icon">🎬</span>
                     <div>
-                        <h3 class="bento-title" data-zh="AI 應用" data-en="AI Application">AI Application</h3>
-                        <p class="bento-desc" data-zh="在中大 AI Hackathon 獲優異獎。" data-en="Merit in AI Hackathon.">Merit in AI Hackathon.</p>
+                        <h3 class="bento-title" data-zh="影片剪輯" data-en="Video Editing">Video Editing</h3>
+                        <p class="bento-desc" data-zh="第三屆「跨代傳承愛」短片創作比賽嘉許狀" data-en='Certificate of Commendation in The third "Cross generational Inheritance of Love"'>Certificate of Commendation in The third "Cross generational Inheritance of Love"</p>
                     </div>
                 </div>
-                
+
+                <div class="bento-item medium">
+                    <span class="bento-icon">📷</span>
+                    <div>
+                        <h3 class="bento-title" data-zh="攝影" data-en="Photography">Photography</h3>
+                        <p class="bento-desc" data-zh="第三屆「跨代傳承愛」攝影比賽嘉許狀" data-en='Certificate of Commendation in The third "Cross generational Inheritance of Love"'>Certificate of Commendation in The third "Cross generational Inheritance of Love"</p>
+                    </div>
+                </div>
+
+                <div class="bento-item medium">
+                    <span class="bento-icon">🎤</span>
+                    <div>
+                        <h3 class="bento-title" data-zh="朗誦" data-en="Recitation">Recitation</h3>
+                        <p class="bento-desc" data-zh="2022粵港姊妹學校合唱誦比賽一等獎（廣州）" data-en="The First Prize in 2022 Guangdong-Hong Kong Sister School Choral Speaking Contest (Guangzhou)">The First Prize in 2022 Guangdong-Hong Kong Sister School Choral Speaking Contest (Guangzhou)</p>
+                    </div>
+                </div>
+
                 <div class="bento-item small">
-                    <i class="fas fa-volleyball-ball bento-icon"></i>
+                    <span class="bento-icon">⚽</span>
+                    <div>
+                        <h3 class="bento-title" data-zh="足球" data-en="Football">Football</h3>
+                        <p class="bento-desc" data-zh="足球學會成員" data-en="Football Studies Club Member">Football Studies Club Member</p>
+                    </div>
+                </div>
+
+                <div class="bento-item small">
+                    <span class="bento-icon">💻</span>
+                    <div>
+                        <h3 class="bento-title" data-zh="AI 應用" data-en="AI Application">AI Application</h3>
+                        <p class="bento-desc" data-zh="在中大 AI Hackathon 獲優異獎" data-en="Merit in AI Hackathon.">Merit in AI Hackathon.</p>
+                    </div>
+                </div>
+
+                <div class="bento-item small">
+                    <span class="bento-icon">🏐</span>
                     <div>
                         <h3 class="bento-title" data-zh="排球" data-en="Volleyball">Volleyball</h3>
                         <p class="bento-desc" data-zh="屯門青年盃殿軍 (2024)。" data-en="4th in T.M. Youth Cup.">4th in T.M. Youth Cup.</p>
                     </div>
                 </div>
-                
+
                 <div class="bento-item small">
-                    <i class="fas fa-hands-helping bento-icon"></i>
+                    <span class="bento-icon">🤝</span>
                     <div>
                         <h3 class="bento-title" data-zh="義工服務" data-en="Volunteering">Volunteering</h3>
-                        <p class="bento-desc" data-zh="參與大哥哥大姐姐計劃及數學輔導。" data-en="Big Brother/Sister Scheme.">Big Brother/Sister Scheme.</p>
+                        <p class="bento-desc" data-zh="參與大哥哥大姐姐計劃及數學輔導" data-en="Big Brother/Sister Scheme & Math Mentor.">Big Brother/Sister Scheme & Math Mentor.</p>
                     </div>
                 </div>
-                
-                <div class="bento-item medium quote">
-                    <p class="bento-desc" data-zh="「我走得很慢，但我從不後退」" data-en="'I am a slow walker,but I never walk backwards.'">
-                        "I am a slow walker,but I never walk backwards."
-                    </p>
-                </div>
-                
+
                 <div class="bento-item small map-widget">
-                    <i class="fas fa-map-marker-alt bento-icon"></i>
+                    <span class="bento-icon">📍</span>
                     <div>
                         <h3 class="bento-title" data-zh="位置" data-en="Location">Location</h3>
                         <p class="bento-desc" data-zh="基於香港" data-en="Based in Hong Kong">Based in Hong Kong</p>
                     </div>
                 </div>
-                
-                <div class="bento-item large">
-                    <i class="fas fa-lightbulb bento-icon"></i>
+
+                <div class="bento-item medium">
+                    <span class="bento-icon">👥</span>
                     <div>
                         <h3 class="bento-title" data-zh="MiTeen 學會" data-en="Mi Teen Club">MiTeen Club</h3>
-                        <p class="bento-desc" data-zh="曾任主席，帶領團隊研發智能跑步機、投籃計分機等項目。" data-en="Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.">
+                        <p class="bento-desc" data-zh="曾任主席，帶領團隊研發智能跑步機、投籃計分機等項目" data-en="Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.">
                             Former Chairperson. Led team to develop Smart Treadmill and Basketball Scoring Machine.
                         </p>
                     </div>
+                </div>
+
+                <div class="bento-item medium quote">
+                    <p class="bento-desc" data-zh="「我走得很慢，但我從不後退」" data-en="'I am a slow walker,but I never walk backwards.'">
+                        "I am a slow walker,but I never walk backwards."
+                    </p>
                 </div>
             </div>
         </section>
@@ -3455,7 +4212,7 @@
                         <div class="service-tech">
                             <span class="service-tech-item">C++</span>
                             <span class="service-tech-item">Python</span>
-                            <span class="service-tech-item">MySQLS</span>
+                            <span class="service-tech-item">MySQL</span>
                         </div>
                     </div>
                     
@@ -3550,156 +4307,156 @@
                 
                 <div id="partA" class="award-list active">
                     <h3 class="award-category-title" data-zh="國際競賽與大灣區獎項" data-en="International Competitions & GBA Awards">International Competitions & GBA Awards</h3>
-                    
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-medal award-icon"></i>
                             <div>
-                                <div class="award-name">Merit Award - Greater Bay Area Outstanding Students Award</div>
+                                <div class="award-name">Merit Award in the High School Group of The Greater Bay Area Outstanding Students Award</div>
                                 <div class="award-sub">HKSMS & GBAOSA</div>
                             </div>
                         </div>
-                    <div class="award-year">2024-2025</div>
-                </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-plane-departure award-icon"></i>
                             <div>
-                                <div class="award-name">Certificate of Excellence - GBA Academic Low Altitude Flight Application Challenge</div>
+                                <div class="award-name">Certificate of Excellence in Greater Bay Area Academic Low Altitude Flight Application Case Challenge</div>
                                 <div class="award-sub">Bay Area Hong Kong Centre</div>
                             </div>
                         </div>
-                        <div class="award-year">2024-2025</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-shield-alt award-icon"></i>
                             <div>
-                                <div class="award-name">Excellence Award - GBA Youth AI & Cyber Security Finals</div>
-                                <div class="award-sub">CSTCB & Judiciary Police & iTLE</div>
+                                <div class="award-name">GBA Youth AI & Cyber Security Finals Excellence Award</div>
+                                <div class="award-sub">CSTCB & Judiciary Police & AiTLE</div>
                             </div>
                         </div>
-                    <div class="award-year">2023-2024</div>
-                </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-calculator award-icon"></i>
                             <div>
-                                <div class="award-name">Merit Winner - International Hope Cup Mathematics Invitational</div>
-                                <div class="award-sub">Advanced Division | Hong Kong-Macau Region</div>
+                                <div class="award-name">Merit Winner in Hong Kong-Macau Region's IHC Advanced Division</div>
+                                <div class="award-sub">HOPE MATH WORLD & International Hope Cup Mathematics Invitational</div>
                             </div>
                         </div>
-                    <div class="award-year">2023-2024</div>
-                </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-robot award-icon"></i>
                             <div>
-                                <div class="award-name">Selection Competition - 2nd GBA STEM/AI Challenge</div>
+                                <div class="award-name">The Second Guangdong Hong Kong Macao Greater Bay Area STEM/AI Challenge Hong Kong Selection Competition</div>
                                 <div class="award-sub">Hong Kong Tech-Inno Association</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
-            </div>
-            
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-pen-alt award-icon"></i>
                             <div>
                                 <div class="award-name">Kangaroo Contest 2025</div>
                                 <div class="award-sub">Hong Kong Mathematics Kangaroo Contest</div>
-                </div>
-                </div>
-                        <div class="award-year">2023-2024</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
                     </div>
                 </div>
 
                 <div id="partB" class="award-list" style="display: none;">
                     <h3 class="award-category-title" data-zh="本地競賽與課外成就" data-en="Local Competitions & External Achievements">Local Competitions & External Achievements</h3>
-                    
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-tools award-icon"></i>
                             <div>
-                                <div class="award-name">2nd Runner-Up - STEAM Summer Camp Creative Assembly Competition</div>
+                                <div class="award-name">2nd Runner-Up in STEAM Summer Camp Creative Assembly Competition</div>
                                 <div class="award-sub">Hong Kong Institute of Construction</div>
                             </div>
                         </div>
-                    <div class="award-year">2024-2025</div>
-                </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-leaf award-icon"></i>
                             <div>
-                                <div class="award-name">Finalist Award - "Embrace AI – CODING∞ Environmental Technology Competition and Exhibition 2024"</div>
-                                <div class="award-sub">The Centum Charitas Foundation</div>
-                </div>
-                </div>
-                        <div class="award-year">2024-2025</div>
-                </div>
+                                <div class="award-name">Finalist Award in 2024 "Children Embrace AI" CODING∞ Environmental Technology Competition</div>
+                                <div class="award-sub">The Centum Charitas Foundation (CCF)</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-hammer award-icon"></i>
                             <div>
-                                <div class="award-name">Merit Award - STEAM Summer Camp Creative Assembly Competition</div>
+                                <div class="award-name">Merit Award in STEAM Summer Camp Creative Assembly Competition</div>
                                 <div class="award-sub">Hong Kong Institute of Construction</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
-            </div>
-            
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-volleyball-ball award-icon"></i>
                             <div>
-                                <div class="award-name">4th Place - T.M. Youth Volleyball Competition</div>
+                                <div class="award-name">4th in 2024 T.M. Youth Volleyball Competition</div>
                                 <div class="award-sub">Leisure and Cultural Services Department</div>
-                </div>
+                            </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
+                        <div class="award-year">2023–2024</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-running award-icon"></i>
                             <div>
-                                <div class="award-name">Outward Coach Program - Volleyball Challenge</div>
-                                <div class="award-sub">Leisure and Cultural Services Department</div>
+                                <div class="award-name">Certificate of Participation in Outward Coach Program - Volleyball Challenge 2022</div>
+                                <div class="award-sub">Volleyball Association of Hong Kong, China & Leisure and Cultural Services Department</div>
                             </div>
                         </div>
-                        <div class="award-year">2022-2023</div>
+                        <div class="award-year">2022–2023</div>
                     </div>
                 </div>
 
                 <div id="partC" class="award-list" style="display: none;">
                     <h3 class="award-category-title" data-zh="校內職務與社會服務" data-en="Key Positions & Community Service">Key Positions & Community Service</h3>
-                    
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-chalkboard-teacher award-icon"></i>
+                            <div>
+                                <div class="award-name">Monitor</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2025–2026</div>
+                    </div>
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-user-tie award-icon" style="color: var(--primary);"></i>
                             <div>
                                 <div class="award-name">Vice-head Prefect</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                    <div class="award-year">2023-2025</div>
-                </div>
-
-                    <div class="award-row">
-                        <div class="award-main">
-                            <i class="fas fa-users award-icon"></i>
-                            <div>
-                                <div class="award-name">Chairperson & Member of Mi Teen Academy</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
-                            </div>
-                        </div>
-                        <div class="award-year">2022-2025</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
@@ -3707,43 +4464,32 @@
                             <i class="fas fa-chalkboard-teacher award-icon"></i>
                             <div>
                                 <div class="award-name">Monitor</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2026</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
-                            <i class="fas fa-hand-holding-heart award-icon"></i>
+                            <i class="fas fa-calculator award-icon"></i>
                             <div>
-                                <div class="award-name">Big Brother and Sister Scheme</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-name">Mathematics Club Committee Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2025</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
-                            <i class="fas fa-heart award-icon" style="color: #ef4444;"></i>
+                            <i class="fas fa-flag award-icon"></i>
                             <div>
-                                <div class="award-name">Commendation for Students with Hearts</div>
-                                <div class="award-sub">Continuous Service Recognition</div>
+                                <div class="award-name">Moral & Civic Ed Ambassador</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                    <div class="award-year">2021-2024</div>
-                </div>
-
-                    <div class="award-row">
-                        <div class="award-main">
-                            <i class="fas fa-hands-helping award-icon"></i>
-                            <div>
-                                <div class="award-name">Cross Generational Inheritance of Love - Commendation</div>
-                                <div class="award-sub">The Hong Kong Jockey Club</div>
-                </div>
-                        </div>
-                        <div class="award-year">2024-2025</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
@@ -3751,146 +4497,575 @@
                             <i class="fas fa-book-reader award-icon"></i>
                             <div>
                                 <div class="award-name">Subject Leader</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                        <div class="award-year">2022-2025</div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-users award-icon"></i>
+                            <div>
+                                <div class="award-name">Mi Teen Academy Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-music award-icon"></i>
+                            <div>
+                                <div class="award-name">Rock Music Club Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-graduation-cap award-icon"></i>
+                            <div>
+                                <div class="award-name">Student Mentor of the Mathematics Mentoring Scheme</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-hand-holding-heart award-icon"></i>
+                            <div>
+                                <div class="award-name">Certificate of Award in Big Brother and Sister Scheme 2024-2025</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-hands-helping award-icon"></i>
+                            <div>
+                                <div class="award-name">Certificate of Commendation in The third "Cross generational Inheritance of Love" Hong Kong Short term Fundraising and Volunteer Care Campaign of the 50+Volunteer Promotion Program for the Charity of the Masses</div>
+                                <div class="award-sub">The Hong Kong Jockey Club Charities Trust & Evangelical Lutheran Church Charities Trust Social Service - Hong Kong</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-user-tie award-icon" style="color: var(--primary);"></i>
+                            <div>
+                                <div class="award-name">Vice-head Prefect</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-users award-icon"></i>
+                            <div>
+                                <div class="award-name">Chairperson of Mi Teen Academy</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-chalkboard-teacher award-icon"></i>
+                            <div>
+                                <div class="award-name">Monitor</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-home award-icon"></i>
+                            <div>
+                                <div class="award-name">House Committee Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-futbol award-icon"></i>
+                            <div>
+                                <div class="award-name">Football Studies Club Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-calculator award-icon"></i>
+                            <div>
+                                <div class="award-name">Mathematics Club Committee Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-briefcase award-icon"></i>
+                            <div>
+                                <div class="award-name">Career Prefect</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-graduation-cap award-icon"></i>
+                            <div>
+                                <div class="award-name">Student Mentor of the Mathematics Mentoring Scheme</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-heart award-icon" style="color: #ef4444;"></i>
+                            <div>
+                                <div class="award-name">Certificate of Commendation for Students with Hearts</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-hand-holding-heart award-icon"></i>
+                            <div>
+                                <div class="award-name">Certificate of Award in Big Brother and Sister Scheme 2023-2024</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-gavel award-icon"></i>
+                            <div>
+                                <div class="award-name">United Court Student Mentor</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-user-tie award-icon"></i>
+                            <div>
+                                <div class="award-name">Prefect Minor</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-graduation-cap award-icon"></i>
+                            <div>
+                                <div class="award-name">Student Mentor of Peer Coaching Scheme</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-dumbbell award-icon"></i>
+                            <div>
+                                <div class="award-name">Gym Manager</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-theater-masks award-icon"></i>
+                            <div>
+                                <div class="award-name">School Club Fun Fair Helper/Performer</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-book-reader award-icon"></i>
                             <div>
-                                <div class="award-name">Math Mentor</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-name">Subject Leader</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2025</div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-users award-icon"></i>
+                            <div>
+                                <div class="award-name">Mi Teen Academy Member</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-heart award-icon" style="color: #ef4444;"></i>
+                            <div>
+                                <div class="award-name">Certificate of Commendation for Students with Hearts</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-heart award-icon" style="color: #ef4444;"></i>
+                            <div>
+                                <div class="award-name">Certificate of Commendation for Students with Hearts</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2021–2022</div>
                     </div>
                 </div>
 
                 <div id="partD" class="award-list" style="display: none;">
                     <h3 class="award-category-title" data-zh="STEAM成就與其他獎項" data-en="STEAM Achievements & Other Honors">STEAM Achievements & Other Honors</h3>
-                    
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-star award-icon" style="color: #eab308;"></i>
+                            <div>
+                                <div class="award-name">Platinum Award in "Understanding National High-Quality Development" Online Learning Activity — In Celebration of the 76th Anniversary of the Founding of the People's Republic of China</div>
+                                <div class="award-sub">Education Bureau</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2025–2026</div>
+                    </div>
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-city award-icon" style="color: var(--primary);"></i>
                             <div>
-                                <div class="award-name">1st Runner-up - PolyU Build a Smart City Competition 2025</div>
+                                <div class="award-name">1st Runner-up in the "Project: Spatial Data Challenge in Smart City" category of the PolyU Faculty of Construction and Environment Build a Smart City Competition 2025</div>
                                 <div class="award-sub">PolyU</div>
                             </div>
                         </div>
-                        <div class="award-year">2024-2025</div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-code-branch award-icon"></i>
                             <div>
-                                <div class="award-name">Merit Winner - AI Hackathon 2025</div>
+                                <div class="award-name">Merit Winner in AI Hackathon 2025</div>
                                 <div class="award-sub">CUHK</div>
                             </div>
                         </div>
-                        <div class="award-year">2024-2025</div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-shield-alt award-icon"></i>
+                            <div>
+                                <div class="award-name">Merit Award in Cyber Attack and Defence Elite Training cum Tournament 2025</div>
+                                <div class="award-sub">HKIRC</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-code-branch award-icon"></i>
                             <div>
-                                <div class="award-name">Merit Winner - Cyber Attack and Defence Elite</div>
-                                <div class="award-sub">HKIRC</div>
+                                <div class="award-name">Certification of Merit in AI Hackathon 2025</div>
+                                <div class="award-sub">CUHK</div>
                             </div>
                         </div>
-                        <div class="award-year">2024-2025</div>
+                        <div class="award-year">2024–2025</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-certificate award-icon"></i>
+                            <div>
+                                <div class="award-name">Certification of Participation in The 27th Hong Kong Youth Technology Innovation Competition</div>
+                                <div class="award-sub">Hong Kong Youth Technology Innovation Competition</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2024–2025</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-trophy award-icon" style="color: #eab308;"></i>
                             <div>
-                                <div class="award-name">Elite Champion - Caltex Robot Competition 2023</div>
+                                <div class="award-name">Caltex Robot Engineer Labs - Hong Kong Primary and Secondary Schools Robotics Competition 2023 Elite Champion Caltex Robot Competition Elite Champion</div>
                                 <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
-                    </div>
-                    
-                    <div class="award-row">
-                        <div class="award-main">
-                            <i class="fas fa-trophy award-icon" style="color: #94a3b8;"></i>
-                            <div>
-                                <div class="award-name">1st Runner-Up - Caltex Robot</div>
-                                <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
-                            </div>
-                        </div>
-                        <div class="award-year">2023-2024</div>
+                        <div class="award-year">2023–2024</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-trophy award-icon" style="color: #94a3b8;"></i>
                             <div>
-                                <div class="award-name">2nd Runner-Up - Caltex Robot</div>
-                                <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
-                            </div>
-                        </div>
-                        <div class="award-year">2023-2024</div>
-                    </div>
-
-                    <div class="award-row">
-                        <div class="award-main">
-                            <i class="fas fa-trophy award-icon" style="color: #94a3b8;"></i>
-                            <div>
-                                <div class="award-name">2nd Runner-Up - Timed Resource Collection</div>
+                                <div class="award-name">2nd Runner up in Timed Resource Collection</div>
                                 <div class="award-sub">HKIE</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-trophy award-icon" style="color: #c0c0c0;"></i>
+                            <div>
+                                <div class="award-name">1st Runner-up in Caltex Robot Engineer Labs - Hong Kong Primary and Secondary School Robotics Competition 2023 Curling Catapult Battle Secondary School Group</div>
+                                <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-trophy award-icon" style="color: #94a3b8;"></i>
                             <div>
-                                <div class="award-name">2nd Class Award - 1v1 Knockout Competition</div>
+                                <div class="award-name">2nd Class award in 1v1 Knockout Competition</div>
                                 <div class="award-sub">HKIE</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-trophy award-icon" style="color: #c0c0c0;"></i>
+                            <div>
+                                <div class="award-name">1st Runner-Up in Caltex Robot Competition</div>
+                                <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-trophy award-icon" style="color: #94a3b8;"></i>
+                            <div>
+                                <div class="award-name">2nd Runner-Up in Caltex Robot Competition</div>
+                                <div class="award-sub">The Boys' & Girls' Clubs Association of Hong Kong</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-robot award-icon"></i>
+                            <div>
+                                <div class="award-name">Certification of Participation in AI x Python Coding of the Jockey Club AI Community Innovation Programme</div>
+                                <div class="award-sub">Jockey Club</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-laptop-code award-icon"></i>
                             <div>
-                                <div class="award-name">Bronze Award - HK Secondary School IT Knowledge Challenge 2023</div>
+                                <div class="award-name">Bronze Award in 2023 Hong Kong Secondary School IT Knowledge Challenge</div>
                                 <div class="award-sub">VTC Group</div>
                             </div>
                         </div>
-                        <div class="award-year">2023-2024</div>
+                        <div class="award-year">2023–2024</div>
                     </div>
 
                     <div class="award-row">
                         <div class="award-main">
-                            <i class="fas fa-star award-icon"></i>
+                            <i class="fas fa-certificate award-icon"></i>
                             <div>
-                                <div class="award-name">Academic Improvement Awards</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-name">Certification of Participation in The 8th Elite Cup - STEAM Education Challenge</div>
+                                <div class="award-sub">Elite Cup - STEAM Education Challenge</div>
                             </div>
                         </div>
-                        <div class="award-year">2021-2024</div>
+                        <div class="award-year">2023–2024</div>
                     </div>
-                    
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-car award-icon"></i>
+                            <div>
+                                <div class="award-name">Certification of Participation in 263 GT3 Virtual Challenge Student Class</div>
+                                <div class="award-sub">263 GT3 Virtual Challenge</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-medal award-icon"></i>
+                            <div>
+                                <div class="award-name">Progress Commendation Award in The 7th Hong Kong Youth Progress Award 2023</div>
+                                <div class="award-sub">Hong Kong Youth Progress Award</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-chart-line award-icon"></i>
+                            <div>
+                                <div class="award-name">Academic Improvement Award</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
                     <div class="award-row">
                         <div class="award-main">
                             <i class="fas fa-book award-icon"></i>
                             <div>
-                                <div class="award-name">First in Subject Awards - Religious Studies, Computer Literacy, Chinese History</div>
-                                <div class="award-sub">S.K.H. Bishop Baker Secondary School</div>
+                                <div class="award-name">First in Religious Studies</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
                             </div>
                         </div>
-                        <div class="award-year">2022-2023</div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-running award-icon"></i>
+                            <div>
+                                <div class="award-name">Joint School White Path Special Training Program</div>
+                                <div class="award-sub">Joint School Sports Programme</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2023–2024</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-robot award-icon"></i>
+                            <div>
+                                <div class="award-name">Certification of Participation in Yuen Long District Secondary School Robotics Training Workshop Basic Level</div>
+                                <div class="award-sub">Yuen Long District Secondary School Robotics Training</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-robot award-icon"></i>
+                            <div>
+                                <div class="award-name">Certification of Participation in Yuen Long District Secondary School Robotics Training Workshop Advanced Level</div>
+                                <div class="award-sub">Yuen Long District Secondary School Robotics Training</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-chart-line award-icon"></i>
+                            <div>
+                                <div class="award-name">Academic Improvement Award</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-laptop award-icon"></i>
+                            <div>
+                                <div class="award-name">First in Computer Literacy</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-book award-icon"></i>
+                            <div>
+                                <div class="award-name">First in Chinese History</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2022–2023</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-mobile-alt award-icon"></i>
+                            <div>
+                                <div class="award-name">For participating Augmented Reality Mobile Applications Development Courses in School Year 2021-22</div>
+                                <div class="award-sub">Augmented Reality Mobile Applications Development</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2021–2022</div>
+                    </div>
+
+                    <div class="award-row">
+                        <div class="award-main">
+                            <i class="fas fa-chart-line award-icon"></i>
+                            <div>
+                                <div class="award-name">Academic Improvement Award</div>
+                                <div class="award-sub">SKH BISHOP BAKER SECONDARY SCHOOL</div>
+                            </div>
+                        </div>
+                        <div class="award-year">2021–2022</div>
                     </div>
                 </div>
 
@@ -4071,24 +5246,44 @@
                 activeList.style.animation = 'fadeIn 0.5s ease-out';
             }
 
+            /* Staggered scroll-in animation */
+            const cardSelectors = '.bento-item, .skill-item-new, .work-card, .exp-card, .service-card';
+            const allCards = document.querySelectorAll(cardSelectors);
+
+            /* Group cards by parent section and assign stagger indices */
+            const staggerGroups = new Map();
+            allCards.forEach(card => {
+                const parent = card.closest('section') || card.closest('.about-grid') || card.parentElement;
+                if (!staggerGroups.has(parent)) staggerGroups.set(parent, []);
+                staggerGroups.get(parent).push(card);
+            });
+
+            const cardStaggerMap = new Map();
+            staggerGroups.forEach((cards) => {
+                cards.forEach((card, index) => {
+                    card.classList.add('anim-card');
+                    cardStaggerMap.set(card, index * 100);
+                });
+            });
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        if (entry.target.classList.contains('exp-card')) {
+                        const delay = cardStaggerMap.get(entry.target) || 0;
+                        setTimeout(() => {
                             entry.target.classList.add('visible');
+                        }, delay);
+                        observer.unobserve(entry.target);
+                        if (entry.target.classList.contains('exp-card')) {
+                            setTimeout(() => {
+                                entry.target.classList.add('visible');
+                            }, delay);
                         }
                     }
                 });
-            }, { threshold: 0.1 });
-            
-            document.querySelectorAll('.section-title, .bento-item, .work-card, .exp-card, .service-card').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'all 0.6s ease-out';
-                observer.observe(el);
-            });
+            }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+            allCards.forEach(el => { observer.observe(el); });
             
             const timelineObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -4118,17 +5313,348 @@
                 });
             }
             
-            window.addEventListener('load', function() {
-                setTimeout(() => {
-                    const loader = document.getElementById('loader');
-                    if (loader) {
-                        loader.classList.add('exiting');
-                        setTimeout(() => {
-                            loader.classList.add('hidden');
-                            document.body.classList.add('loaded');
-                        }, 800);
+            /* ============ ENTRY GATE SYSTEM ============ */
+            const entryGate = document.getElementById('entryGate');
+            const gateEnterBtn = document.getElementById('gateEnterBtn');
+            const gateRings = document.getElementById('gateRings');
+            const captchaOverlay = document.getElementById('captchaOverlay');
+            let gatePassed = false;
+
+            /* Generate gate particles */
+            function createGateParticles() {
+                if (!entryGate) return;
+                for (let i = 0; i < 50; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'gate-particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDelay = Math.random() * 8 + 's';
+                    p.style.animationDuration = (Math.random() * 8 + 4) + 's';
+                    if (Math.random() > 0.6) {
+                        p.style.background = '#9D4EDD';
+                        p.style.boxShadow = '0 0 6px #9D4EDD, 0 0 12px #9D4EDD';
                     }
+                    entryGate.appendChild(p);
+                }
+            }
+            createGateParticles();
+
+            /* Gate enter button - show CAPTCHA */
+            if (gateEnterBtn) {
+                gateEnterBtn.addEventListener('click', function(e) {
+                    if (gatePassed) return;
+
+                    /* Ripple effect */
+                    const ripple = document.createElement('div');
+                    ripple.className = 'gate-ripple';
+                    ripple.style.left = e.clientX + 'px';
+                    ripple.style.top = e.clientY + 'px';
+                    entryGate.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 1000);
+
+                    /* Collapse rings */
+                    if (gateRings) gateRings.classList.add('collapsing');
+
+                    /* Show captcha after brief delay */
+                    setTimeout(() => {
+                        entryGate.classList.add('transitioning');
+                        captchaOverlay.classList.add('active');
+                        initCaptcha();
+                    }, 600);
+                });
+            }
+
+            /* ============ CAPTCHA SYSTEM ============ */
+            let captchaTargetLeft = 0;
+            let captchaSolved = false;
+            let captchaAttempts = 0;
+            let captchaCleanup = null;
+
+            function initCaptcha() {
+                /* Remove previous listeners if re-initializing */
+                if (captchaCleanup) { captchaCleanup(); captchaCleanup = null; }
+                if (captchaSolved) return;
+
+                captchaAttempts = 0;
+                const puzzle = document.getElementById('captchaPuzzle');
+                const piece = document.getElementById('captchaPiece');
+                const cutout = document.getElementById('captchaCutout');
+                const thumb = document.getElementById('captchaSliderThumb');
+                const fill = document.getElementById('captchaSliderFill');
+                const track = document.getElementById('captchaSliderTrack');
+                const status = document.getElementById('captchaStatus');
+                const timerEl = document.getElementById('captchaTimer');
+
+                if (!puzzle || !piece || !cutout) return;
+
+                const puzzleWidth = puzzle.clientWidth;
+                const pieceWidth = 70;
+                const maxLeft = puzzleWidth - pieceWidth - 4;
+                const tolerance = 8;
+                const TIMEOUT_MS = 5000;
+
+                /* Random target position (avoid edges) */
+                captchaTargetLeft = Math.floor(Math.random() * (maxLeft - 60)) + 30;
+                cutout.style.left = captchaTargetLeft + 'px';
+
+                /* Reset piece & thumb */
+                piece.style.left = '10px';
+                piece.classList.remove('matched', 'wrong');
+                if (fill) fill.style.width = '0%';
+                if (thumb) thumb.style.left = '3px';
+                if (status) { status.textContent = ''; status.className = 'captcha-status'; }
+                captchaSolved = false;
+
+                /* Shared drag state */
+                let isDragging = false;
+                let thumbDragging = false;
+                let startX = 0;
+                let pieceStartLeft = 10;
+                let timeoutId = null;
+                let dragStartTime = 0;
+
+                function updateTimer() {
+                    /* Timer display hidden during drag — only shown on success */
+                }
+
+                function getClientX(e) {
+                    return e.touches ? e.touches[0].clientX : e.clientX;
+                }
+
+                /* Sync slider-thumb horizontal position to match piece position */
+                function syncThumb(pieceLeft) {
+                    if (!thumb || !track) return;
+                    var tw = track.clientWidth;
+                    var thumbW = 40;
+                    var range = tw - thumbW - 6;
+                    thumb.style.left = (3 + (pieceLeft / maxLeft) * range) + 'px';
+                }
+
+                /* ---- 5-second timeout (Google-style) ---- */
+                function startTimeout() {
+                    clearTimeout(timeoutId);
+                    dragStartTime = Date.now();
+                    timeoutId = setTimeout(function() {
+                        isDragging = false;
+                        thumbDragging = false;
+                        dragStartTime = 0;
+                        piece.classList.add('wrong');
+                        if (status) {
+                            status.textContent = 'Verification timeout. Please try again.';
+                            status.className = 'captcha-status error';
+                        }
+                        if (timerEl) { timerEl.textContent = ''; timerEl.className = 'captcha-timer'; }
+                        setTimeout(function() {
+                            piece.style.left = '10px';
+                            piece.classList.remove('wrong');
+                            if (fill) fill.style.width = '0%';
+                            if (thumb) thumb.style.left = '3px';
+                            timeoutId = null;
+                        }, 600);
+                    }, TIMEOUT_MS);
+                }
+
+                function clearTimeoutSafe() {
+                    if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+                    dragStartTime = 0;
+                }
+
+                function resetUI() {
+                    piece.style.left = '10px';
+                    piece.classList.remove('wrong', 'matched');
+                    if (fill) fill.style.width = '0%';
+                    if (thumb) thumb.style.left = '3px';
+                    if (timerEl) { timerEl.textContent = ''; timerEl.className = 'captcha-timer'; }
+                    clearTimeoutSafe();
+                }
+
+                /* ---- Success handler ---- */
+                function onSuccess() {
+                    captchaSolved = true;
+                    isDragging = false;
+                    thumbDragging = false;
+                    var elapsed = dragStartTime ? ((Date.now() - dragStartTime) / 1000).toFixed(1) : '0.0';
+                    clearTimeoutSafe();
+                    piece.style.left = captchaTargetLeft + 'px';
+                    piece.classList.add('matched');
+                    syncThumb(captchaTargetLeft);
+                    if (fill) fill.style.width = ((captchaTargetLeft / maxLeft) * 100) + '%';
+                    if (status) {
+                        status.textContent = 'Verification passed! Welcome.';
+                        status.className = 'captcha-status success';
+                    }
+                    if (timerEl) {
+                        timerEl.textContent = 'Completed in ' + elapsed + 's';
+                        timerEl.className = 'captcha-timer done';
+                    }
+                    setTimeout(resolveCaptcha, 2000);
+                }
+
+                /* ---- Check result on drag-end ---- */
+                function checkResult() {
+                    captchaAttempts++;
+                    var pieceLeft = parseInt(piece.style.left) || 10;
+                    var diff = Math.abs(pieceLeft - captchaTargetLeft);
+
+                    if (diff <= tolerance) {
+                        onSuccess();
+                    } else if (captchaAttempts >= 3) {
+                        clearTimeoutSafe();
+                        piece.classList.add('wrong');
+                        if (status) {
+                            status.textContent = 'Too many attempts. Generating new puzzle…';
+                            status.className = 'captcha-status error';
+                        }
+                        setTimeout(function() {
+                            resetUI();
+                            initCaptcha();
+                        }, 1500);
+                    } else {
+                        clearTimeoutSafe();
+                        piece.classList.add('wrong');
+                        if (status) {
+                            status.textContent = 'Not quite right. Try again. (' + captchaAttempts + '/3)';
+                            status.className = 'captcha-status error';
+                        }
+                        setTimeout(function() { resetUI(); }, 600);
+                    }
+                }
+
+                /* ---- Piece drag handlers ---- */
+                function onPieceStart(e) {
+                    if (captchaSolved) return;
+                    isDragging = true;
+                    thumbDragging = false;
+                    startX = getClientX(e);
+                    pieceStartLeft = parseInt(piece.style.left) || 10;
+                    piece.classList.remove('wrong');
+                    if (status) { status.textContent = ''; status.className = 'captcha-status'; }
+                    startTimeout();
+                    e.preventDefault();
+                }
+
+                function onPieceMove(e) {
+                    if (!isDragging || captchaSolved) return;
+                    var dx = getClientX(e) - startX;
+                    var newLeft = pieceStartLeft + dx;
+                    newLeft = Math.max(2, Math.min(maxLeft, newLeft));
+                    piece.style.left = newLeft + 'px';
+                    syncThumb(newLeft);
+                    if (fill) fill.style.width = ((newLeft / maxLeft) * 100) + '%';
+                }
+
+                function onPieceEnd() {
+                    if (!isDragging || captchaSolved) return;
+                    isDragging = false;
+                    checkResult();
+                }
+
+                /* ---- Thumb drag handlers ---- */
+                function onThumbStart(e) {
+                    if (captchaSolved) return;
+                    thumbDragging = true;
+                    isDragging = false;
+                    startX = getClientX(e);
+                    pieceStartLeft = parseInt(piece.style.left) || 10;
+                    piece.classList.remove('wrong');
+                    if (status) { status.textContent = ''; status.className = 'captcha-status'; }
+                    startTimeout();
+                    e.preventDefault();
+                }
+
+                function onThumbMove(e) {
+                    if (!thumbDragging || captchaSolved) return;
+                    var dx = getClientX(e) - startX;
+                    var newLeft = pieceStartLeft + dx;
+                    newLeft = Math.max(2, Math.min(maxLeft, newLeft));
+                    piece.style.left = newLeft + 'px';
+                    syncThumb(newLeft);
+                    if (fill) fill.style.width = ((newLeft / maxLeft) * 100) + '%';
+                }
+
+                function onThumbEnd() {
+                    if (!thumbDragging || captchaSolved) return;
+                    thumbDragging = false;
+                    checkResult();
+                }
+
+                /* ---- Document-level move/end (catch releases outside element) ---- */
+                function docMouseMove(e) {
+                    if (isDragging) onPieceMove(e);
+                    if (thumbDragging) onThumbMove(e);
+                }
+                function docMouseUp(e) {
+                    if (isDragging) onPieceEnd();
+                    if (thumbDragging) onThumbEnd();
+                }
+                function docTouchMove(e) {
+                    if (isDragging) onPieceMove(e);
+                    if (thumbDragging) onThumbMove(e);
+                }
+                function docTouchEnd(e) {
+                    if (isDragging) onPieceEnd();
+                    if (thumbDragging) onThumbEnd();
+                }
+
+                /* Bind element-level listeners */
+                piece.addEventListener('mousedown', onPieceStart);
+                piece.addEventListener('touchstart', onPieceStart, {passive: false});
+                piece.addEventListener('touchmove', onPieceMove, {passive: false});
+                piece.addEventListener('touchend', onPieceEnd);
+
+                if (thumb) {
+                    thumb.addEventListener('mousedown', onThumbStart);
+                    thumb.addEventListener('touchstart', onThumbStart, {passive: false});
+                }
+
+                /* Bind document-level listeners */
+                document.addEventListener('mousemove', docMouseMove);
+                document.addEventListener('mouseup', docMouseUp);
+                document.addEventListener('touchmove', docTouchMove, {passive: false});
+                document.addEventListener('touchend', docTouchEnd);
+
+                /* Store cleanup for next re-init */
+                captchaCleanup = function() {
+                    piece.removeEventListener('mousedown', onPieceStart);
+                    piece.removeEventListener('touchstart', onPieceStart);
+                    piece.removeEventListener('touchmove', onPieceMove);
+                    piece.removeEventListener('touchend', onPieceEnd);
+                    if (thumb) {
+                        thumb.removeEventListener('mousedown', onThumbStart);
+                        thumb.removeEventListener('touchstart', onThumbStart);
+                    }
+                    document.removeEventListener('mousemove', docMouseMove);
+                    document.removeEventListener('mouseup', docMouseUp);
+                    document.removeEventListener('touchmove', docTouchMove);
+                    document.removeEventListener('touchend', docTouchEnd);
+                    clearTimeoutSafe();
+                };
+            }
+
+            function resolveCaptcha() {
+                /* Hide captcha overlay */
+                captchaOverlay.classList.remove('active');
+
+                /* Trigger wormhole exit on gate */
+                entryGate.classList.add('exiting');
+                gatePassed = true;
+
+                setTimeout(() => {
+                    entryGate.classList.add('hidden');
+                    document.body.classList.add('gate-passed');
                 }, 1000);
+            }
+
+            /* Keep old loader reference for compatibility */
+            const loader = document.getElementById('loader');
+            if (loader) {
+                /* Remove old loader immediately if it exists */
+                loader.style.display = 'none';
+            }
+
+            window.addEventListener('load', function() {
+                /* Old loader logic is replaced by entry gate */
+                /* Entry gate is visible by default, no auto-hide */
             });
             
             const workDetails = [
@@ -4599,46 +6125,7 @@
                     });
                 });
             });
-            
-            const skillRings = document.querySelectorAll('.skill-ring');
-            const skillObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !entry.target.hasAttribute('data-animated')) {
-                        const ring = entry.target;
-                        const pct = ring.getAttribute('data-val').replace('%', '');
-                        ring.style.setProperty('--pct', pct + '%');
-                        ring.setAttribute('data-animated', 'true');
-                        
-                        const valSpan = ring.querySelector('span') || document.createElement('span');
-                        if (!ring.querySelector('span')) {
-                            ring.appendChild(valSpan);
-                        }
-                        
-                        let current = 0;
-                        const target = parseInt(pct);
-                        const duration = 1500;
-                        const increment = target / (duration / 16);
-                        
-                        const animate = () => {
-                            current += increment;
-                            if (current < target) {
-                                valSpan.textContent = Math.floor(current) + '%';
-                                ring.style.setProperty('--pct', Math.floor(current) + '%');
-                                requestAnimationFrame(animate);
-                } else {
-                                valSpan.textContent = target + '%';
-                                ring.style.setProperty('--pct', target + '%');
-                            }
-                        };
-                        animate();
-                    }
-                });
-            }, { threshold: 0.5 });
-            
-            skillRings.forEach(ring => {
-                skillObserver.observe(ring);
-            });
-            
+
             const reduceMotionToggle = document.getElementById('reduceMotionToggle');
             if (reduceMotionToggle) {
                 reduceMotionToggle.addEventListener('change', (e) => {
